@@ -1,0 +1,17 @@
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: r
+sudo: false
+cache: packages
+
+matrix:
+  include:
+    - r: 3.1
+      warnings_are_errors: false
+    - r: oldrel
+    - r: release
+      env: R_CODECOV=true
+    - r: devel
+
+after_success:
+  - if [[ "${R_CODECOV}" ]]; then R -e 'covr::codecov()'; fi
