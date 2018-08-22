@@ -9,6 +9,7 @@ Description: What the package does (one paragraph).
 Depends:
     R (>= 3.1.0)
 Imports:
+    pryr,
     rlang (>= 0.2.0)
 Suggests:
     testthat
