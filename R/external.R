@@ -5,6 +5,11 @@ new_external <- function(ext) {
   if (!is_function(ext)) {
     abort("`ext` must be a function")
   }
+
+  # Remove srcrefs because they are no use on the remote and they
+  # print `!!` instead of its result
+  attr(ext, "srcref") <- NULL
+
   structure(ext, class = "external")
 }
 
