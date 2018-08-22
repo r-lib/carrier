@@ -40,3 +40,10 @@ test_that("fails if relevant data not supplied", {
   fn <- ext(foo = "foo", ~toupper(foobar))
   expect_error(fn(), "not found")
 })
+
+test_that("external function roundtrips under serialisation", {
+  fn <- ext(~toupper(foo), foo = "foo")
+  out <- unserialize(serialize(fn, NULL))
+  expect_equal(fn_env(fn), fn_env(out))
+  expect_identical(fn(), out())
+})
