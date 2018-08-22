@@ -10,6 +10,8 @@ Depends:
     R (>= 3.1.0)
 Imports:
     rlang (>= 0.2.0)
+Suggests:
+    testthat
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
