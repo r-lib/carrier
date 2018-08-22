@@ -1,17 +1,21 @@
-#' Create an external function
+#' @import rlang
+NULL
+
+#' Create a crated function
 #'
 #' @description
 #'
-#' `ext()` creates functions in a child of the base environment. These
-#' functions must be self-contained:
+#' `crate()` creates functions in a self-contained environment
+#' (technically, a child of the base environment). Consequently these
+#' functions must be self-contained as well:
 #'
 #' * They should call package functions with an explicit `::`
 #'   namespace.
 #'
-#' * They should import data they depend on.
+#' * They should import any data they depend on.
 #'
-#' You can import data in two ways: by supplying named arguments or by
-#' unquoting objects with `!!`.
+#' You can import data by supplying named arguments or by unquoting
+#' objects with `!!`.
 #'
 #' @param .fn An unevaluated function or formula. Formulas are
 #'   converted to purrr-like lambda functions using
@@ -19,23 +23,23 @@
 #' @param ... Named arguments to import in the environment of `.fn`.
 #' @export
 #' @examples
-#' # Create external functions using the ordinary notation:
-#' ext(function(x) stats::var(x))
+#' # You can create functions using the ordinary notation:
+#' crate(function(x) stats::var(x))
 #'
 #' # Or the formula notation:
-#' ext(~stats::var(.x))
+#' crate(~stats::var(.x))
 #'
 #' # Import data by supplying named arguments. You can test you have
-#' # imported all necessary data by calling your external function:
+#' # imported all necessary data by calling your crated function:
 #' na_rm <- TRUE
-#' fn <- ext(~stats::var(.x, na.rm = na_rm), na_rm = na_rm)
+#' fn <- crate(~stats::var(.x, na.rm = na_rm), na_rm = na_rm)
 #' fn(1:10)
 #'
 #' # For small data it is handy to unquote instead. Unquoting inlines
 #' # objects inside the function:
-#' fn <- ext(~stats::var(.x, na.rm = !!na_rm))
+#' fn <- crate(~stats::var(.x, na.rm = !!na_rm))
 #' fn(1:10)
-ext <- function(.fn, ...) {
+crate <- function(.fn, ...) {
   # Evaluate arguments in a child of the caller so the caller context
   # is in scope and new data is created in a separate child
   env <- child_env(caller_env())
@@ -58,5 +62,61 @@ ext <- function(.fn, ...) {
     abort("Can't supply an evaluated function")
   }
 
-  new_external(fn)
+  new_crate(fn)
+}
+
+
+new_crate <- function(crate) {
+  if (!is_function(crate)) {
+    abort("`crate` must be a function")
+  }
+
+  # Remove srcrefs because they are no use on the remote and they
+  # print `!!` instead of its result
+  attr(crate, "srcref") <- NULL
+
+  structure(crate, class = "crate")
+}
+
+#' Is an object an external function?
+#'
+#' @param x An object to test.
+#' @export
+is_crate <- function(x) {
+  inherits(x, "crate")
+}
+
+#' @export
+print.crate <- function(x, ...) {
+  size <- format(pryr::object_size(x), ...)
+  cat(sprintf("<crate> %s\n", size))
+
+  env <- fn_env(x)
+  nms <- ls(env)
+  for (nm in nms) {
+    size <- format(pryr::object_size(env[[nm]]), ...)
+    cat(sprintf("* `%s`: %s\n", nm, size))
+  }
+
+  # Print without environment tag
+  fn <- unclass(x)
+  environment(fn) <- global_env()
+  print(unclass(fn), ...)
+
+  invisible(x)
+}
+
+# From pryr
+format.bytes <- function(x, digits = 3, ...) {
+  power <- min(floor(log(abs(x), 1000)), 4)
+  if (power < 1) {
+    unit <- "B"
+  } else {
+    unit <- c("kB", "MB", "GB", "TB")[[power]]
+    x <- x / (1000 ^ power)
+  }
+
+  x <- signif(x, digits = digits)
+  fmt <- format(unclass(x), big.mark = ",", scientific = FALSE)
+  paste(fmt, unit)
 }
