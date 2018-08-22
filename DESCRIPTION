@@ -12,7 +12,8 @@ Imports:
     pryr,
     rlang (>= 0.2.0)
 Suggests:
-    testthat
+    testthat,
+    covr
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
