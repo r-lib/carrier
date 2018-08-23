@@ -17,7 +17,7 @@ NULL
 #' You can declare data by supplying named arguments or by unquoting
 #' objects with `!!`.
 #'
-#' @param .fn An unevaluated function or formula. Formulas are
+#' @param .fn A formula or function, unevaluated. Formulas are
 #'   converted to purrr-like lambda functions using
 #'   [rlang::as_function()].
 #' @param ... Named arguments to declare in the environment of `.fn`.
@@ -32,13 +32,24 @@ NULL
 #' # Declare data by supplying named arguments. You can test you have
 #' # declared all necessary data by calling your crated function:
 #' na_rm <- TRUE
-#' fn <- crate(~stats::var(.x, na.rm = na_rm), na_rm = na_rm)
+#' fn <- crate(~stats::var(.x, na.rm = na_rm))
+#' try(fn(1:10))
+#'
+#' fn <- crate(
+#'   ~stats::var(.x, na.rm = na_rm),
+#'   na_rm = na_rm
+#' )
 #' fn(1:10)
 #'
 #' # For small data it is handy to unquote instead. Unquoting inlines
-#' # objects inside the function:
+#' # objects inside the function. This is less verbose if your
+#' # function depends on many small objects:
 #' fn <- crate(~stats::var(.x, na.rm = !!na_rm))
 #' fn(1:10)
+#'
+#' # One downside is that the individual sizes of unquoted objects
+#' # won't be shown in the crate printout:
+#' fn
 crate <- function(.fn, ...) {
   # Evaluate arguments in a child of the caller so the caller context
   # is in scope and new data is created in a separate child
