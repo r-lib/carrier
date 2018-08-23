@@ -67,6 +67,11 @@ fn <- crate(function(x) stats::var(x, na.rm = na_rm))
 fn(1:10)
 ```
 
+There are two techniques for packaging data into your crate.
+
+
+#### Passing data as arguments
+
 You can declare objects by passing them as named arguments to `crate()`:
 
 ```{r}
@@ -97,10 +102,40 @@ crate(function(x) stats::var(x, na.rm = na_rm), !na_rm)
 crate(function(x) stats::var(x, na.rm = na_rm), na_rm = !na_rm)
 ```
 
-Another way of importing data is to unquote objects with `!!`. This is because unquoting inlines objects in function calls. Unquoting can be less verbose if you have many small objects to import inside the function. One downside is that the sizes of unquoted objects doesn't show in the crate printout (but are included in the total size):
+
+#### Unquoting data in the function
+
+Another way of packaging data is to unquote objects with `!!`. This works because unquoting inlines objects in function calls. Unquoting can be less verbose if you have many small objects to import inside the function.
 
 ```{r}
 crate(function(x) stats::var(x, na.rm = !!na_rm))
+```
+
+However be careful not to unquote large objects because:
+
+* The sizes of unquoted objects are not detailed when you print the crate.
+* Inlined data can cause noisy output.
+
+Let's unquote a data frame to see the noise caused by inlining:
+
+```{r}
+# Subset a few rows so the call is not too noisy
+data <- mtcars[1:5, ]
+
+# Inline data in call by unquoting
+fn <- crate(function(model) stats::lm(model, data = !!data))
+```
+
+This crate will print with noisy inlined data:
+
+```{r}
+fn
+```
+
+Same for the function call recorded by `lm()`:
+
+```{r}
+fn(disp ~ drat)
 ```
 
 Finally, you can also assign objects in a block just before defining your function:
