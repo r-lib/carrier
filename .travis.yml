@@ -10,8 +10,7 @@ matrix:
       warnings_are_errors: false
     - r: oldrel
     - r: release
+      after_success:
+        - Rscript -e 'covr::codecov()'
       env: R_CODECOV=true
     - r: devel
-
-after_success:
-  - if [[ "${R_CODECOV}" ]]; then R -e 'covr::codecov()'; fi
