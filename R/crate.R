@@ -6,21 +6,34 @@ NULL
 #' @description
 #'
 #' `crate()` creates functions in a self-contained environment
-#' (technically, a child of the base environment). Consequently these
-#' functions must be self-contained as well:
+#' (technically, a child of the base environment). This has two
+#' advantages:
+#'
+#' * They can easily be executed in another process.
+#'
+#' * Their effects are reproducible. You can run them locally with the
+#'   same results as on a different process.
+#'
+#' Creating self-contained functions requires some care, see section
+#' below.
+#'
+#'
+#' @section Creating self-contained functions:
 #'
 #' * They should call package functions with an explicit `::`
-#'   namespace.
+#'   namespace. This includes packages in the default search path with
+#'   the exception of the base package. For instance `var()` from the
+#'   stats package must be called with its namespace prefix:
+#'   `stats::var(x)`.
 #'
-#' * They should declare any data they depend on.
-#'
-#' You can declare data by supplying named arguments or by unquoting
-#' objects with `!!`.
+#' * They should declare any data they depend on. You can declare data
+#'   by supplying named arguments or by unquoting objects with `!!`.
 #'
 #' @param .fn A formula or function, unevaluated. Formulas are
 #'   converted to purrr-like lambda functions using
 #'   [rlang::as_function()].
 #' @param ... Named arguments to declare in the environment of `.fn`.
+#'
 #' @export
 #' @examples
 #' # You can create functions using the ordinary notation:

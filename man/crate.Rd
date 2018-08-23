@@ -15,17 +15,30 @@ converted to purrr-like lambda functions using
 }
 \description{
 \code{crate()} creates functions in a self-contained environment
-(technically, a child of the base environment). Consequently these
-functions must be self-contained as well:
+(technically, a child of the base environment). This has two
+advantages:
 \itemize{
-\item They should call package functions with an explicit \code{::}
-namespace.
-\item They should declare any data they depend on.
+\item They can easily be executed in another process.
+\item Their effects are reproducible. You can run them locally with the
+same results as on a different process.
 }
 
-You can declare data by supplying named arguments or by unquoting
-objects with \code{!!}.
+Creating self-contained functions requires some care, see section
+below.
 }
+\section{Creating self-contained functions}{
+
+\itemize{
+\item They should call package functions with an explicit \code{::}
+namespace. This includes packages in the default search path with
+the exception of the base package. For instance \code{var()} from the
+stats package must be called with its namespace prefix:
+\code{stats::var(x)}.
+\item They should declare any data they depend on. You can declare data
+by supplying named arguments or by unquoting objects with \code{!!}.
+}
+}
+
 \examples{
 # You can create functions using the ordinary notation:
 crate(function(x) stats::var(x))
