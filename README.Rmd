@@ -137,17 +137,3 @@ Same for the function call recorded by `lm()`:
 ```{r}
 fn(disp ~ drat)
 ```
-
-Finally, you can also assign objects in a block just before defining your function:
-
-```{r}
-crate({
-  data <- mtcars
-  var <- "cyl"
-  offset <- 10
-
-  function() {
-    data[[var]] + offset
-  }
-})
-```
