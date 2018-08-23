@@ -95,3 +95,20 @@ test_that("sizes are printed with the crate", {
 
   expect_output(print(fn), output, fixed = TRUE)
 })
+
+test_that("empty crates are printed correctly", {
+  fn <- crate(~NULL)
+
+  bare_fn <- fn
+  attributes(bare_fn) <- NULL
+  environment(bare_fn) <- global_env()
+
+  bare_size <- format(pryr::object_size(bare_fn))
+
+  output <- "
+* function: %s
+function"
+  output <- sprintf(output, bare_size)
+
+  expect_output(print(fn), output, fixed = TRUE)
+})
