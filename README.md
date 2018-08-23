@@ -63,7 +63,10 @@ fn(1:10)
 You can declare objects by passing them as named arguments to `crate()`:
 
 ``` r
-fn <- crate(function(x) stats::var(x, na.rm = na_rm), na_rm = na_rm)
+fn <- crate(
+  function(x) stats::var(x, na.rm = na_rm),
+  na_rm = na_rm
+)
 fn(1:10)
 #> [1] 9.166667
 ```
@@ -78,7 +81,33 @@ fn
 #> stats::var(x, na.rm = na_rm)
 ```
 
-Another way of importing data is to unquote objects with `!!`. This is because unquoting inlines objects in function calls:
+The arguments are automatically named after themselves to make it easier to import objects with the same name:
+
+``` r
+crate(function(x) stats::var(x, na.rm = na_rm), na_rm)
+#> <crate> 1.51 kB
+#> * `na_rm`: 56 B
+#> function (x) 
+#> stats::var(x, na.rm = na_rm)
+```
+
+However you need to be careful with complex expressions: those should always be named. Can you spot the difference between these two crates?
+
+``` r
+crate(function(x) stats::var(x, na.rm = na_rm), !na_rm)
+#> <crate> 1.57 kB
+#> * `!na_rm`: 56 B
+#> function (x) 
+#> stats::var(x, na.rm = na_rm)
+
+crate(function(x) stats::var(x, na.rm = na_rm), na_rm = !na_rm)
+#> <crate> 1.51 kB
+#> * `na_rm`: 56 B
+#> function (x) 
+#> stats::var(x, na.rm = na_rm)
+```
+
+Another way of importing data is to unquote objects with `!!`. This is because unquoting inlines objects in function calls. Unquoting can be less verbose if you have many small objects to import inside the function. One downside is that the sizes of unquoted objects doesn't show in the crate printout (but are included in the total size):
 
 ``` r
 crate(function(x) stats::var(x, na.rm = !!na_rm))

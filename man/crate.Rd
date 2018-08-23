@@ -11,7 +11,9 @@ crate(.fn, ...)
 converted to purrr-like lambda functions using
 \code{\link[rlang:as_function]{rlang::as_function()}}.}
 
-\item{...}{Named arguments to declare in the environment of \code{.fn}.}
+\item{...}{Arguments to declare in the environment of \code{.fn}. If a
+name is supplied, the object is assigned to that name. Otherwise
+the argument is automatically named.}
 }
 \description{
 \code{crate()} creates functions in a self-contained environment
@@ -35,7 +37,7 @@ the exception of the base package. For instance \code{var()} from the
 stats package must be called with its namespace prefix:
 \code{stats::var(x)}.
 \item They should declare any data they depend on. You can declare data
-by supplying named arguments or by unquoting objects with \code{!!}.
+by supplying additional arguments or by unquoting objects with \code{!!}.
 }
 }
 
@@ -52,11 +54,14 @@ na_rm <- TRUE
 fn <- crate(~stats::var(.x, na.rm = na_rm))
 try(fn(1:10))
 
-fn <- crate(
-  ~stats::var(.x, na.rm = na_rm),
-  na_rm = na_rm
-)
-fn(1:10)
+# Arguments are automatically named after themselves so that the
+# following are equivalent:
+crate(~stats::var(.x, na.rm = na_rm), na_rm = na_rm)
+crate(~stats::var(.x, na.rm = na_rm), na_rm)
+
+# However if you supply a complex expression, do supply a name!
+crate(~stats::var(.x, na.rm = na_rm), !na_rm)
+crate(~stats::var(.x, na.rm = na_rm), na_rm = na_rm)
 
 # For small data it is handy to unquote instead. Unquoting inlines
 # objects inside the function. This is less verbose if your

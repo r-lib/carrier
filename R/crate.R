@@ -27,12 +27,14 @@ NULL
 #'   `stats::var(x)`.
 #'
 #' * They should declare any data they depend on. You can declare data
-#'   by supplying named arguments or by unquoting objects with `!!`.
+#'   by supplying additional arguments or by unquoting objects with `!!`.
 #'
 #' @param .fn A formula or function, unevaluated. Formulas are
 #'   converted to purrr-like lambda functions using
 #'   [rlang::as_function()].
-#' @param ... Named arguments to declare in the environment of `.fn`.
+#' @param ... Arguments to declare in the environment of `.fn`. If a
+#'   name is supplied, the object is assigned to that name. Otherwise
+#'   the argument is automatically named.
 #'
 #' @export
 #' @examples
@@ -48,11 +50,14 @@ NULL
 #' fn <- crate(~stats::var(.x, na.rm = na_rm))
 #' try(fn(1:10))
 #'
-#' fn <- crate(
-#'   ~stats::var(.x, na.rm = na_rm),
-#'   na_rm = na_rm
-#' )
-#' fn(1:10)
+#' # Arguments are automatically named after themselves so that the
+#' # following are equivalent:
+#' crate(~stats::var(.x, na.rm = na_rm), na_rm = na_rm)
+#' crate(~stats::var(.x, na.rm = na_rm), na_rm)
+#'
+#' # However if you supply a complex expression, do supply a name!
+#' crate(~stats::var(.x, na.rm = na_rm), !na_rm)
+#' crate(~stats::var(.x, na.rm = na_rm), na_rm = na_rm)
 #'
 #' # For small data it is handy to unquote instead. Unquoting inlines
 #' # objects inside the function. This is less verbose if your
@@ -67,7 +72,8 @@ crate <- function(.fn, ...) {
   # Evaluate arguments in a child of the caller so the caller context
   # is in scope and new data is created in a separate child
   env <- child_env(caller_env())
-  locally(..., .env = env)
+  dots <- exprs(..., .named = TRUE)
+  locally(!!!dots, .env = env)
 
   # Quote and evaluate in the local env to avoid capturing execution
   # envs when user passed an unevaluated function or formula

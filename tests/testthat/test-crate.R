@@ -48,7 +48,7 @@ test_that("can supply data in a block", {
     ~paste(foo, bar)
   })
 
-  expect_true(all(env_names(fn_env(fn)) %in% c("foo", "bar")))
+  expect_data(fn, "foo", "bar")
 })
 
 test_that("external function roundtrips under serialisation", {
@@ -65,4 +65,11 @@ test_that("new_crate() requires functions", {
 
 test_that("new_crate() creates external objects", {
   expect_is(new_crate(function() NULL), "crate")
+})
+
+test_that("arguments are auto-named", {
+  foo <- 1L; bar <- 2L
+  fn <- crate(~foo + bar, foo, bar)
+  expect_data(fn, "foo", "bar")
+  expect_identical(fn(), 3L)
 })
