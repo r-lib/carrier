@@ -73,3 +73,25 @@ test_that("arguments are auto-named", {
   expect_data(fn, "foo", "bar")
   expect_identical(fn(), 3L)
 })
+
+test_that("sizes are printed with the crate", {
+  foo <- "foo"
+  bar <- 1:100
+  fn <- crate(~NULL, foo = foo, bar = bar)
+
+  bare_fn <- fn
+  attributes(bare_fn) <- NULL
+  environment(bare_fn) <- global_env()
+
+  bare_size <- format(pryr::object_size(bare_fn))
+  bar_size <- format(pryr::object_size(bar))
+  foo_size <- format(pryr::object_size(foo))
+
+  output <- "
+* function: %s
+* `bar`: %s
+* `foo`: %s"
+  output <- sprintf(output, bare_size, bar_size, foo_size)
+
+  expect_output(print(fn), output, fixed = TRUE)
+})

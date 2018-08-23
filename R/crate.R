@@ -116,22 +116,54 @@ is_crate <- function(x) {
   inherits(x, "crate")
 }
 
+# Unexported until the `bytes` class is moved to lobstr (and probably
+# becomes `lobstr_bytes`)
+crate_sizes <- function(crate) {
+  bare_fn <- unclass(crate)
+  environment(bare_fn) <- global_env()
+
+  bare_size <- pryr::object_size(bare_fn)
+
+  env <- fn_env(crate)
+  nms <- ls(env)
+
+  n <- length(nms) + 1
+  out <- new_list(n, c("function", nms))
+  out[[1]] <- bare_size
+
+  index <- seq2(2, n)
+  get_size <- function(nm) pryr::object_size(env[[nm]])
+  out[index] <- lapply(nms, get_size)
+
+  # Sort data by decreasing size but keep function first
+  order <- order(as.numeric(out[-1]), decreasing = TRUE)
+  out <- out[c(1, order + 1)]
+
+  out
+}
+
+
 #' @export
 print.crate <- function(x, ...) {
-  size <- format(pryr::object_size(x), ...)
-  cat(sprintf("<crate> %s\n", size))
+  sizes <- crate_sizes(x)
 
-  env <- fn_env(x)
-  nms <- ls(env)
-  for (nm in nms) {
-    size <- format(pryr::object_size(env[[nm]]), ...)
+  total_size <- format(pryr::object_size(x), ...)
+  cat(sprintf("<crate> %s\n", total_size))
+
+  fn_size <- format(sizes[[1]], ...)
+  cat(sprintf("* function: %s\n", fn_size))
+
+  nms <- names(sizes)
+  for (i in seq2_along(2, sizes)) {
+    nm <- nms[[i]]
+    size <- format(sizes[[i]], ...)
     cat(sprintf("* `%s`: %s\n", nm, size))
   }
 
-  # Print without environment tag
-  fn <- unclass(x)
-  environment(fn) <- global_env()
-  print(unclass(fn), ...)
+  # Print function without the environment tag
+  bare_fn <- unclass(x)
+  environment(bare_fn) <- global_env()
+  print(bare_fn, ...)
 
   invisible(x)
 }
