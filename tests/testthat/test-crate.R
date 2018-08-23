@@ -41,6 +41,16 @@ test_that("fails if relevant data not supplied", {
   expect_error(fn(), "not found")
 })
 
+test_that("can supply data in a block", {
+  fn <- crate({
+    foo <- "foo"
+    bar <- "bar"
+    ~paste(foo, bar)
+  })
+
+  expect_true(all(env_names(fn_env(fn)) %in% c("foo", "bar")))
+})
+
 test_that("external function roundtrips under serialisation", {
   fn <- crate(~toupper(foo), foo = "foo")
   out <- unserialize(serialize(fn, NULL))
