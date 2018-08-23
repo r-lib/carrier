@@ -2,7 +2,7 @@
 % Please edit documentation in R/crate.R
 \name{crate}
 \alias{crate}
-\title{Create a crated function}
+\title{Crate a function to share with another process}
 \usage{
 crate(.fn, ...)
 }
@@ -11,7 +11,7 @@ crate(.fn, ...)
 converted to purrr-like lambda functions using
 \code{\link[rlang:as_function]{rlang::as_function()}}.}
 
-\item{...}{Named arguments to import in the environment of \code{.fn}.}
+\item{...}{Named arguments to declare in the environment of \code{.fn}.}
 }
 \description{
 \code{crate()} creates functions in a self-contained environment
@@ -20,10 +20,10 @@ functions must be self-contained as well:
 \itemize{
 \item They should call package functions with an explicit \code{::}
 namespace.
-\item They should import any data they depend on.
+\item They should declare any data they depend on.
 }
 
-You can import data by supplying named arguments or by unquoting
+You can declare data by supplying named arguments or by unquoting
 objects with \code{!!}.
 }
 \examples{
@@ -33,8 +33,8 @@ crate(function(x) stats::var(x))
 # Or the formula notation:
 crate(~stats::var(.x))
 
-# Import data by supplying named arguments. You can test you have
-# imported all necessary data by calling your crated function:
+# Declare data by supplying named arguments. You can test you have
+# declared all necessary data by calling your crated function:
 na_rm <- TRUE
 fn <- crate(~stats::var(.x, na.rm = na_rm), na_rm = na_rm)
 fn(1:10)

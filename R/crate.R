@@ -1,7 +1,7 @@
 #' @import rlang
 NULL
 
-#' Create a crated function
+#' Crate a function to share with another process
 #'
 #' @description
 #'
@@ -12,15 +12,15 @@ NULL
 #' * They should call package functions with an explicit `::`
 #'   namespace.
 #'
-#' * They should import any data they depend on.
+#' * They should declare any data they depend on.
 #'
-#' You can import data by supplying named arguments or by unquoting
+#' You can declare data by supplying named arguments or by unquoting
 #' objects with `!!`.
 #'
 #' @param .fn An unevaluated function or formula. Formulas are
 #'   converted to purrr-like lambda functions using
 #'   [rlang::as_function()].
-#' @param ... Named arguments to import in the environment of `.fn`.
+#' @param ... Named arguments to declare in the environment of `.fn`.
 #' @export
 #' @examples
 #' # You can create functions using the ordinary notation:
@@ -29,8 +29,8 @@ NULL
 #' # Or the formula notation:
 #' crate(~stats::var(.x))
 #'
-#' # Import data by supplying named arguments. You can test you have
-#' # imported all necessary data by calling your crated function:
+#' # Declare data by supplying named arguments. You can test you have
+#' # declared all necessary data by calling your crated function:
 #' na_rm <- TRUE
 #' fn <- crate(~stats::var(.x, na.rm = na_rm), na_rm = na_rm)
 #' fn(1:10)

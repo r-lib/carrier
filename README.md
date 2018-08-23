@@ -50,7 +50,7 @@ fn(1:10)
 
 ### Explicit data
 
-If your function depends on global data, you need to import it to make it available to your crated function. Here we forgot to import `na_rm`:
+If your function depends on global data, you need to declare it to make it available to your crated function. Here we forgot to declare `na_rm`:
 
 ``` r
 na_rm <- TRUE
@@ -60,7 +60,7 @@ fn(1:10)
 #> Error in stats::var(x, na.rm = na_rm): object 'na_rm' not found
 ```
 
-You can import objects by passing them as named arguments to `crate()`:
+You can declare objects by passing them as named arguments to `crate()`:
 
 ``` r
 fn <- crate(function(x) stats::var(x, na.rm = na_rm), na_rm = na_rm)
@@ -92,17 +92,19 @@ Finally, you can also assign objects in a block just before defining your functi
 ``` r
 crate({
   data <- mtcars
+  var <- "cyl"
   offset <- 10
 
   function() {
-    data$cyl + offset
+    data[[var]] + offset
   }
 })
-#> <crate> 16.6 kB
+#> <crate> 17.6 kB
 #> * `data`: 7.21 kB
 #> * `offset`: 56 B
+#> * `var`: 112 B
 #> function () 
 #> {
-#>     data$cyl + offset
+#>     data[[var]] + offset
 #> }
 ```
