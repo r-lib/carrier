@@ -112,3 +112,10 @@ function"
 
   expect_output(print(fn), output, fixed = TRUE)
 })
+
+test_that("function must be defined in the crate environment", {
+  fn <- function() NULL
+  expect_error(crate(fn), "must be defined inside")
+
+  expect_is(crate(set_env(fn)), "crate")
+})

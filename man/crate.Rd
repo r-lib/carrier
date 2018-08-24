@@ -7,8 +7,10 @@
 crate(.fn, ...)
 }
 \arguments{
-\item{.fn}{A formula or function, unevaluated. Formulas are
-converted to purrr-like lambda functions using
+\item{.fn}{A fresh formula or function. "Fresh" here means that
+they should be declared in the call to \code{crate()}. See examples if
+you need to crate a function that is already defined. Formulas
+are converted to purrr-like lambda functions using
 \code{\link[rlang:as_function]{rlang::as_function()}}.}
 
 \item{...}{Arguments to declare in the environment of \code{.fn}. If a
@@ -72,4 +74,16 @@ fn(1:10)
 # One downside is that the individual sizes of unquoted objects
 # won't be shown in the crate printout:
 fn
+
+
+# The function or formula you pass to crate() should defined inside
+# the crate() call, i.e. you can't pass an already defined
+# function:
+fn <- function(x) toupper(x)
+try(crate(fn))
+
+# If you really need to crate an existing function, you can
+# explicitly set its environment to the crate environment with the
+# set_env() function from rlang:
+crate(rlang::set_env(fn))
 }

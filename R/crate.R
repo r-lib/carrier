@@ -29,8 +29,10 @@ NULL
 #' * They should declare any data they depend on. You can declare data
 #'   by supplying additional arguments or by unquoting objects with `!!`.
 #'
-#' @param .fn A formula or function, unevaluated. Formulas are
-#'   converted to purrr-like lambda functions using
+#' @param .fn A fresh formula or function. "Fresh" here means that
+#'   they should be declared in the call to `crate()`. See examples if
+#'   you need to crate a function that is already defined. Formulas
+#'   are converted to purrr-like lambda functions using
 #'   [rlang::as_function()].
 #' @param ... Arguments to declare in the environment of `.fn`. If a
 #'   name is supplied, the object is assigned to that name. Otherwise
@@ -68,6 +70,18 @@ NULL
 #' # One downside is that the individual sizes of unquoted objects
 #' # won't be shown in the crate printout:
 #' fn
+#'
+#'
+#' # The function or formula you pass to crate() should defined inside
+#' # the crate() call, i.e. you can't pass an already defined
+#' # function:
+#' fn <- function(x) toupper(x)
+#' try(crate(fn))
+#'
+#' # If you really need to crate an existing function, you can
+#' # explicitly set its environment to the crate environment with the
+#' # set_env() function from rlang:
+#' crate(rlang::set_env(fn))
 crate <- function(.fn, ...) {
   # Evaluate arguments in a child of the caller so the caller context
   # is in scope and new data is created in a separate child
@@ -88,8 +102,8 @@ crate <- function(.fn, ...) {
     abort("`.fn` must evaluate to a function")
   }
 
-  if (!is_reference(fn_env(fn), env)) {
-    abort("Can't supply an evaluated function")
+  if (!is_reference(get_env(fn), env)) {
+    abort("The function must be defined inside the `crate()` call")
   }
 
   new_crate(fn)
