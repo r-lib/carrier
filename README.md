@@ -37,7 +37,9 @@ crate(~mean(.x, na.rm = TRUE))
 ```
 
 The crated function prints with its total size in the header so you know
-how much data you will send to remotes.
+how much data you will send to remotes. The size of the bare function
+without any data is also printed in the first bullet, and if you add
+objects to the crate their size is printed in decreasing order.
 
 ### Explicit namespaces
 

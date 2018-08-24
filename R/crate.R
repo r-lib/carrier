@@ -34,7 +34,7 @@ NULL
 #'   [rlang::as_function()].
 #' @param ... Arguments to declare in the environment of `.fn`. If a
 #'   name is supplied, the object is assigned to that name. Otherwise
-#'   the argument is automatically named.
+#'   the argument is automatically named after itself.
 #'
 #' @export
 #' @examples

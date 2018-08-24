@@ -13,7 +13,7 @@ converted to purrr-like lambda functions using
 
 \item{...}{Arguments to declare in the environment of \code{.fn}. If a
 name is supplied, the object is assigned to that name. Otherwise
-the argument is automatically named.}
+the argument is automatically named after itself.}
 }
 \description{
 \code{crate()} creates functions in a self-contained environment
