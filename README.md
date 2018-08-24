@@ -21,10 +21,9 @@ functions using the standard R syntax:
 
 ``` r
 crate(function(x) mean(x, na.rm = TRUE))
-#> <crate> 1.12 kB
-#> * function: 560 B
-#> function (x) 
-#> mean(x, na.rm = TRUE)
+#> <crate> 7 kB
+#> * function: 6.55 kB
+#> function(x) mean(x, na.rm = TRUE)
 ```
 
 Or with a purrr-like lambda syntax:
@@ -95,11 +94,10 @@ the crated function:
 
 ``` r
 fn
-#> <crate> 1.51 kB
-#> * function: 840 B
+#> <crate> 9.31 kB
+#> * function: 8.75 kB
 #> * `na_rm`: 56 B
-#> function (x) 
-#> stats::var(x, na.rm = na_rm)
+#> function(x) stats::var(x, na.rm = na_rm)
 ```
 
 The arguments are automatically named after themselves to make it easier
@@ -107,11 +105,10 @@ to import objects with the same name:
 
 ``` r
 crate(function(x) stats::var(x, na.rm = na_rm), na_rm)
-#> <crate> 1.51 kB
-#> * function: 840 B
+#> <crate> 7.82 kB
+#> * function: 7.26 kB
 #> * `na_rm`: 56 B
-#> function (x) 
-#> stats::var(x, na.rm = na_rm)
+#> function(x) stats::var(x, na.rm = na_rm)
 ```
 
 However you need to be careful with complex expressions: those should
@@ -119,18 +116,16 @@ always be named. Can you spot the difference between these two crates?
 
 ``` r
 crate(function(x) stats::var(x, na.rm = na_rm), !na_rm)
-#> <crate> 1.57 kB
-#> * function: 840 B
+#> <crate> 9.7 kB
+#> * function: 9.09 kB
 #> * `!na_rm`: 56 B
-#> function (x) 
-#> stats::var(x, na.rm = na_rm)
+#> function(x) stats::var(x, na.rm = na_rm)
 
 crate(function(x) stats::var(x, na.rm = na_rm), na_rm = !na_rm)
-#> <crate> 1.51 kB
-#> * function: 840 B
+#> <crate> 9.65 kB
+#> * function: 9.09 kB
 #> * `na_rm`: 56 B
-#> function (x) 
-#> stats::var(x, na.rm = na_rm)
+#> function(x) stats::var(x, na.rm = na_rm)
 ```
 
 #### Unquoting data in the function
@@ -142,10 +137,9 @@ function.
 
 ``` r
 crate(function(x) stats::var(x, na.rm = !!na_rm))
-#> <crate> 1.4 kB
-#> * function: 840 B
-#> function (x) 
-#> stats::var(x, na.rm = TRUE)
+#> <crate> 7.86 kB
+#> * function: 7.42 kB
+#> function(x) stats::var(x, na.rm = !!na_rm)
 ```
 
 However be careful not to unquote large objects because:
@@ -161,18 +155,18 @@ Let’s unquote a data frame to see the noise caused by inlining:
 data <- mtcars[1:5, ]
 
 # Inline data in call by unquoting
-fn <- crate(function(model) stats::lm(model, data = !!data))
+fn <- crate(~stats::lm(.x, data = !!data))
 ```
 
 This crate will print with noisy inlined data:
 
 ``` r
 fn
-#> <crate> 4.2 kB
-#> * function: 3.7 kB
-#> function (model) 
-#> stats::lm(model, data = list(mpg = c(21, 21, 22.8, 21.4, 18.7
-#> ), cyl = c(6, 6, 4, 6, 8), disp = c(160, 160, 108, 258, 360), 
+#> <crate> 4.65 kB
+#> * function: 4.14 kB
+#> function (..., .x = ..1, .y = ..2, . = ..1) 
+#> stats::lm(.x, data = list(mpg = c(21, 21, 22.8, 21.4, 18.7), 
+#>     cyl = c(6, 6, 4, 6, 8), disp = c(160, 160, 108, 258, 360), 
 #>     hp = c(110, 110, 93, 110, 175), drat = c(3.9, 3.9, 3.85, 
 #>     3.08, 3.15), wt = c(2.62, 2.875, 2.32, 3.215, 3.44), qsec = c(16.46, 
 #>     17.02, 18.61, 19.44, 17.02), vs = c(0, 0, 1, 1, 0), am = c(1, 
@@ -186,9 +180,9 @@ Same for the function call recorded by `lm()`:
 fn(disp ~ drat)
 #> 
 #> Call:
-#> stats::lm(formula = model, data = structure(list(mpg = c(21, 
-#> 21, 22.8, 21.4, 18.7), cyl = c(6, 6, 4, 6, 8), disp = c(160, 
-#> 160, 108, 258, 360), hp = c(110, 110, 93, 110, 175), drat = c(3.9, 
+#> stats::lm(formula = .x, data = structure(list(mpg = c(21, 21, 
+#> 22.8, 21.4, 18.7), cyl = c(6, 6, 4, 6, 8), disp = c(160, 160, 
+#> 108, 258, 360), hp = c(110, 110, 93, 110, 175), drat = c(3.9, 
 #> 3.9, 3.85, 3.08, 3.15), wt = c(2.62, 2.875, 2.32, 3.215, 3.44
 #> ), qsec = c(16.46, 17.02, 18.61, 19.44, 17.02), vs = c(0, 0, 
 #> 1, 1, 0), am = c(1, 1, 1, 0, 0), gear = c(4, 4, 4, 3, 3), carb = c(4, 

@@ -101,10 +101,6 @@ new_crate <- function(crate) {
     abort("`crate` must be a function")
   }
 
-  # Remove srcrefs because they are no use on the remote and they
-  # print `!!` instead of its result
-  attr(crate, "srcref") <- NULL
-
   structure(crate, class = "crate")
 }
 

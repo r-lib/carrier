@@ -123,7 +123,7 @@ Let's unquote a data frame to see the noise caused by inlining:
 data <- mtcars[1:5, ]
 
 # Inline data in call by unquoting
-fn <- crate(function(model) stats::lm(model, data = !!data))
+fn <- crate(~stats::lm(.x, data = !!data))
 ```
 
 This crate will print with noisy inlined data:
