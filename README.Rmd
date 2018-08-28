@@ -1,0 +1,139 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+
+library("external")
+```
+
+# external
+
+The external package provides tools to package up functions so they can be sent to remote R sessions or to different processes, and tools to test your crates locally. They make it easy to control what data should be packaged with the function and what size your crated function is.
+
+Currently external only provides a strict function constructor that forces you to be explicit about the functions and the data your function depends on. In the future it will also provide tools to figure it out automatically.
+
+
+## Creating explicit crated functions
+
+`crate()` is a function constructor that forces you to be explicit about which data should be packaged with the function. You can create functions using the standard R syntax:
+
+```{r}
+crate(function(x) mean(x, na.rm = TRUE))
+```
+
+Or with a purrr-like lambda syntax:
+
+```{r}
+crate(~mean(.x, na.rm = TRUE))
+```
+
+The crated function prints with its total size in the header so you know how much data you will send to remotes. The size of the bare function without any data is also printed in the first bullet, and if you add objects to the crate their size is printed in decreasing order.
+
+
+### Explicit namespaces
+
+`crate()` requires you to be explicit about all dependencies of your function. Except for base functions, you have to call functions with their namespace prefix. You can test your function locally to make sure you've been explicit enough. In the following example we forgot to specify that `var()` comes from the stats namespace:
+
+```{r, error = TRUE}
+fn <- crate(~var(.x))
+fn(1:10)
+```
+
+So let's add the namespace prefix:
+
+```{r}
+fn <- crate(~stats::var(.x))
+fn(1:10)
+```
+
+
+### Explicit data
+
+If your function depends on global data, you need to declare it to make it available to your crated function. Here we forgot to declare `na_rm`:
+
+```{r, error = TRUE}
+na_rm <- TRUE
+
+fn <- crate(function(x) stats::var(x, na.rm = na_rm))
+fn(1:10)
+```
+
+There are two techniques for packaging data into your crate.
+
+
+#### Passing data as arguments
+
+You can declare objects by passing them as named arguments to `crate()`:
+
+```{r}
+fn <- crate(
+  function(x) stats::var(x, na.rm = na_rm),
+  na_rm = na_rm
+)
+fn(1:10)
+```
+
+Note how the size of each imported object is displayed when you print the crated function:
+
+```{r}
+fn
+```
+
+The arguments are automatically named after themselves to make it easier to import objects with the same name:
+
+```{r}
+crate(function(x) stats::var(x, na.rm = na_rm), na_rm)
+```
+
+However you need to be careful with complex expressions: those should always be named. Can you spot the difference between these two crates?
+
+```{r}
+crate(function(x) stats::var(x, na.rm = na_rm), !na_rm)
+
+crate(function(x) stats::var(x, na.rm = na_rm), na_rm = !na_rm)
+```
+
+
+#### Unquoting data in the function
+
+Another way of packaging data is to unquote objects with `!!`. This works because unquoting inlines objects in function calls. Unquoting can be less verbose if you have many small objects to import inside the function.
+
+```{r}
+crate(function(x) stats::var(x, na.rm = !!na_rm))
+```
+
+However be careful not to unquote large objects because:
+
+* The sizes of unquoted objects are not detailed when you print the crate.
+* Inlined data can cause noisy output.
+
+Let's unquote a data frame to see the noise caused by inlining:
+
+```{r}
+# Subset a few rows so the call is not too noisy
+data <- mtcars[1:5, ]
+
+# Inline data in call by unquoting
+fn <- crate(~stats::lm(.x, data = !!data))
+```
+
+This crate will print with noisy inlined data:
+
+```{r}
+fn
+```
+
+Same for the function call recorded by `lm()`:
+
+```{r}
+fn(disp ~ drat)
+```
