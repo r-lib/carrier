@@ -1,4 +1,4 @@
-Package: external
+Package: carrier
 Title: Isolate functions for remote execution
 Version: 0.0.0.9000
 Authors@R: c(
@@ -18,7 +18,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 ByteCompile: true
-URL: https://github.com/r-lib/external
-BugReports: https://github.com/r-lib/external/issues
+URL: https://github.com/r-lib/carrier
+BugReports: https://github.com/r-lib/carrier/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.0

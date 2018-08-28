@@ -1,4 +1,4 @@
 library("testthat")
-library("external")
+library("carrier")
 
-test_check("external")
+test_check("carrier")

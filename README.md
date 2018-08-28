@@ -1,14 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# external
+# carrier
 
-The external package provides tools to package up functions so they can
+The carrier package provides tools to package up functions so they can
 be sent to remote R sessions or to different processes, and tools to
 test your crates locally. They make it easy to control what data should
 be packaged with the function and what size your crated function is.
 
-Currently external only provides a strict function constructor that
+Currently carrier only provides a strict function constructor that
 forces you to be explicit about the functions and the data your function
 depends on. In the future it will also provide tools to figure it out
 automatically.
