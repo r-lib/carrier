@@ -2,7 +2,7 @@
 % Please edit documentation in R/crate.R
 \name{is_crate}
 \alias{is_crate}
-\title{Is an object an external function?}
+\title{Is an object a crate?}
 \usage{
 is_crate(x)
 }
@@ -10,5 +10,5 @@ is_crate(x)
 \item{x}{An object to test.}
 }
 \description{
-Is an object an external function?
+Is an object a crate?
 }

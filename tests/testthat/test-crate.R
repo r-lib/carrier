@@ -51,7 +51,7 @@ test_that("can supply data in a block", {
   expect_data(fn, "foo", "bar")
 })
 
-test_that("external function roundtrips under serialisation", {
+test_that("crated function roundtrips under serialisation", {
   fn <- crate(~toupper(foo), foo = "foo")
   out <- unserialize(serialize(fn, NULL))
   expect_equal(fn_env(fn), fn_env(out))
@@ -63,7 +63,7 @@ test_that("new_crate() requires functions", {
   expect_error(new_crate(~foo), "must be a function")
 })
 
-test_that("new_crate() creates external objects", {
+test_that("new_crate() crates", {
   expect_is(new_crate(function() NULL), "crate")
 })
 

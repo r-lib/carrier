@@ -118,7 +118,7 @@ new_crate <- function(crate) {
   structure(crate, class = "crate")
 }
 
-#' Is an object an external function?
+#' Is an object a crate?
 #'
 #' @param x An object to test.
 #' @export
