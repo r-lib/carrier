@@ -8,7 +8,7 @@ be sent to remote R sessions or to different processes, and tools to
 test your crates locally. They make it easy to control what data should
 be packaged with the function and what size your crated function is.
 
-Currently carrier only provides a strict function constructor that
+Currently, carrier only provides a strict function constructor that
 forces you to be explicit about the functions and the data your function
 depends on. In the future it will also provide tools to figure it out
 automatically.
@@ -21,8 +21,8 @@ functions using the standard R syntax:
 
 ``` r
 crate(function(x) mean(x, na.rm = TRUE))
-#> <crate> 7 kB
-#> * function: 6.55 kB
+#> <crate> 6.98 kB
+#> * function: 6.54 kB
 #> function(x) mean(x, na.rm = TRUE)
 ```
 
@@ -36,10 +36,10 @@ crate(~mean(.x, na.rm = TRUE))
 #> mean(.x, na.rm = TRUE)
 ```
 
-The crated function prints with its total size in the header so you know
-how much data you will send to remotes. The size of the bare function
-without any data is also printed in the first bullet, and if you add
-objects to the crate their size is printed in decreasing order.
+The crated function prints with its total size in the header, so you
+know how much data you will send to remotes. The size of the bare
+function without any data is also printed in the first bullet, and if
+you add objects to the crate their size is printed in decreasing order.
 
 ### Explicit namespaces
 
@@ -76,7 +76,8 @@ fn(1:10)
 #> Error in stats::var(x, na.rm = na_rm): object 'na_rm' not found
 ```
 
-There are two techniques for packaging data into your crate.
+There are two techniques for packaging data into your crate: passing
+data as arguments, and unquoting data in the function.
 
 #### Passing data as arguments
 
@@ -96,8 +97,8 @@ the crated function:
 
 ``` r
 fn
-#> <crate> 9.31 kB
-#> * function: 8.75 kB
+#> <crate> 9.3 kB
+#> * function: 8.74 kB
 #> * `na_rm`: 56 B
 #> function(x) stats::var(x, na.rm = na_rm)
 ```
@@ -107,25 +108,25 @@ to import objects with the same name:
 
 ``` r
 crate(function(x) stats::var(x, na.rm = na_rm), na_rm)
-#> <crate> 7.82 kB
-#> * function: 7.26 kB
+#> <crate> 7.8 kB
+#> * function: 7.24 kB
 #> * `na_rm`: 56 B
 #> function(x) stats::var(x, na.rm = na_rm)
 ```
 
-However you need to be careful with complex expressions: those should
+However, you need to be careful with complex expressions: those should
 always be named. Can you spot the difference between these two crates?
 
 ``` r
 crate(function(x) stats::var(x, na.rm = na_rm), !na_rm)
-#> <crate> 9.7 kB
-#> * function: 9.09 kB
+#> <crate> 9.69 kB
+#> * function: 9.07 kB
 #> * `!na_rm`: 56 B
 #> function(x) stats::var(x, na.rm = na_rm)
 
 crate(function(x) stats::var(x, na.rm = na_rm), na_rm = !na_rm)
-#> <crate> 9.65 kB
-#> * function: 9.09 kB
+#> <crate> 9.63 kB
+#> * function: 9.07 kB
 #> * `na_rm`: 56 B
 #> function(x) stats::var(x, na.rm = na_rm)
 ```
@@ -139,12 +140,12 @@ function.
 
 ``` r
 crate(function(x) stats::var(x, na.rm = !!na_rm))
-#> <crate> 7.86 kB
-#> * function: 7.42 kB
+#> <crate> 7.85 kB
+#> * function: 7.4 kB
 #> function(x) stats::var(x, na.rm = !!na_rm)
 ```
 
-However be careful not to unquote large objects because:
+However, be careful not to unquote large objects because:
 
   - The sizes of unquoted objects are not detailed when you print the
     crate.
