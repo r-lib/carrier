@@ -87,20 +87,6 @@ Note how the size of each imported object is displayed when you print the crated
 fn
 ```
 
-The arguments are automatically named after themselves to make it easier to import objects with the same name:
-
-```{r}
-crate(function(x) stats::var(x, na.rm = na_rm), na_rm)
-```
-
-However, you need to be careful with complex expressions: those should always be named. Can you spot the difference between these two crates?
-
-```{r}
-crate(function(x) stats::var(x, na.rm = na_rm), !na_rm)
-
-crate(function(x) stats::var(x, na.rm = na_rm), na_rm = !na_rm)
-```
-
 
 #### Unquoting data in the function
 

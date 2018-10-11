@@ -21,8 +21,8 @@ functions using the standard R syntax:
 
 ``` r
 crate(function(x) mean(x, na.rm = TRUE))
-#> <crate> 6.98 kB
-#> * function: 6.54 kB
+#> <crate> 7 kB
+#> * function: 6.55 kB
 #> function(x) mean(x, na.rm = TRUE)
 ```
 
@@ -97,36 +97,8 @@ the crated function:
 
 ``` r
 fn
-#> <crate> 9.3 kB
-#> * function: 8.74 kB
-#> * `na_rm`: 56 B
-#> function(x) stats::var(x, na.rm = na_rm)
-```
-
-The arguments are automatically named after themselves to make it easier
-to import objects with the same name:
-
-``` r
-crate(function(x) stats::var(x, na.rm = na_rm), na_rm)
-#> <crate> 7.8 kB
-#> * function: 7.24 kB
-#> * `na_rm`: 56 B
-#> function(x) stats::var(x, na.rm = na_rm)
-```
-
-However, you need to be careful with complex expressions: those should
-always be named. Can you spot the difference between these two crates?
-
-``` r
-crate(function(x) stats::var(x, na.rm = na_rm), !na_rm)
-#> <crate> 9.69 kB
-#> * function: 9.07 kB
-#> * `!na_rm`: 56 B
-#> function(x) stats::var(x, na.rm = na_rm)
-
-crate(function(x) stats::var(x, na.rm = na_rm), na_rm = !na_rm)
-#> <crate> 9.63 kB
-#> * function: 9.07 kB
+#> <crate> 9.31 kB
+#> * function: 8.75 kB
 #> * `na_rm`: 56 B
 #> function(x) stats::var(x, na.rm = na_rm)
 ```
@@ -140,8 +112,8 @@ function.
 
 ``` r
 crate(function(x) stats::var(x, na.rm = !!na_rm))
-#> <crate> 7.85 kB
-#> * function: 7.4 kB
+#> <crate> 7.86 kB
+#> * function: 7.42 kB
 #> function(x) stats::var(x, na.rm = !!na_rm)
 ```
 

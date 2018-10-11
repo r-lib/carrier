@@ -56,15 +56,6 @@ na_rm <- TRUE
 fn <- crate(~stats::var(.x, na.rm = na_rm))
 try(fn(1:10))
 
-# Arguments are automatically named after themselves so that the
-# following are equivalent:
-crate(~stats::var(.x, na.rm = na_rm), na_rm = na_rm)
-crate(~stats::var(.x, na.rm = na_rm), na_rm)
-
-# However if you supply a complex expression, do supply a name!
-crate(~stats::var(.x, na.rm = na_rm), !na_rm)
-crate(~stats::var(.x, na.rm = na_rm), na_rm = na_rm)
-
 # For small data it is handy to unquote instead. Unquoting inlines
 # objects inside the function. This is less verbose if your
 # function depends on many small objects:

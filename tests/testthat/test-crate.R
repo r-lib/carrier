@@ -67,13 +67,6 @@ test_that("new_crate() crates", {
   expect_is(new_crate(function() NULL), "crate")
 })
 
-test_that("arguments are auto-named", {
-  foo <- 1L; bar <- 2L
-  fn <- crate(~foo + bar, foo, bar)
-  expect_data(fn, "foo", "bar")
-  expect_identical(fn(), 3L)
-})
-
 test_that("sizes are printed with the crate", {
   foo <- "foo"
   bar <- 1:100

@@ -52,15 +52,6 @@ NULL
 #' fn <- crate(~stats::var(.x, na.rm = na_rm))
 #' try(fn(1:10))
 #'
-#' # Arguments are automatically named after themselves so that the
-#' # following are equivalent:
-#' crate(~stats::var(.x, na.rm = na_rm), na_rm = na_rm)
-#' crate(~stats::var(.x, na.rm = na_rm), na_rm)
-#'
-#' # However if you supply a complex expression, do supply a name!
-#' crate(~stats::var(.x, na.rm = na_rm), !na_rm)
-#' crate(~stats::var(.x, na.rm = na_rm), na_rm = na_rm)
-#'
 #' # For small data it is handy to unquote instead. Unquoting inlines
 #' # objects inside the function. This is less verbose if your
 #' # function depends on many small objects:
@@ -86,7 +77,7 @@ crate <- function(.fn, ...) {
   # Evaluate arguments in a child of the caller so the caller context
   # is in scope and new data is created in a separate child
   env <- child_env(caller_env())
-  dots <- exprs(..., .named = TRUE)
+  dots <- exprs(...)
   locally(!!!dots, .env = env)
 
   # Quote and evaluate in the local env to avoid capturing execution
