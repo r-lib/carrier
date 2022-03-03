@@ -83,14 +83,14 @@
 <p><code><a href="reference/crate.html">crate()</a></code> is a function constructor that forces you to be explicit about which data should be packaged with the function. You can create functions using the standard R syntax:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; &lt;crate&gt; 7 kB</span>
-<span class="co">#&gt; * function: 6.55 kB</span>
+<span class="co">#&gt; &lt;crate&gt; 6.84KB</span>
+<span class="co">#&gt; * function: 6.4KB</span>
 <span class="co">#&gt; function(x) mean(x, na.rm = TRUE)</span></code></pre></div>
 <p>Or with a purrr-like lambda syntax:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">.x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; &lt;crate&gt; 1.57 kB</span>
-<span class="co">#&gt; * function: 1.01 kB</span>
+<span class="co">#&gt; &lt;crate&gt; 1.53KB</span>
+<span class="co">#&gt; * function: 1008B</span>
 <span class="co">#&gt; function (..., .x = ..1, .y = ..2, . = ..1) </span>
 <span class="co">#&gt; mean(.x, na.rm = TRUE)</span></code></pre></div>
 <p>The crated function prints with its total size in the header, so you know how much data you will send to remotes. The size of the bare function without any data is also printed in the first bullet, and if you add objects to the crate their size is printed in decreasing order.</p>
@@ -133,9 +133,9 @@
 <p>Note how the size of each imported object is displayed when you print the crated function:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn</span>
-<span class="co">#&gt; &lt;crate&gt; 9.31 kB</span>
-<span class="co">#&gt; * function: 8.75 kB</span>
-<span class="co">#&gt; * `na_rm`: 56 B</span>
+<span class="co">#&gt; &lt;crate&gt; 9.09KB</span>
+<span class="co">#&gt; * function: 8.55KB</span>
+<span class="co">#&gt; * `na_rm`: 56B</span>
 <span class="co">#&gt; function(x) stats::var(x, na.rm = na_rm)</span></code></pre></div>
 </div>
 <div class="section level4">
@@ -144,8 +144,8 @@
 <p>Another way of packaging data is to unquote objects with <code>!!</code>. This works because unquoting inlines objects in function calls. Unquoting can be less verbose if you have many small objects to import inside the function.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="op">!</span><span class="op">!</span><span class="va">na_rm</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; &lt;crate&gt; 7.86 kB</span>
-<span class="co">#&gt; * function: 7.42 kB</span>
+<span class="co">#&gt; &lt;crate&gt; 7.68KB</span>
+<span class="co">#&gt; * function: 7.24KB</span>
 <span class="co">#&gt; function(x) stats::var(x, na.rm = !!na_rm)</span></code></pre></div>
 <p>However, be careful not to unquote large objects because:</p>
 <ul>
@@ -162,8 +162,8 @@
 <p>This crate will print with noisy inlined data:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn</span>
-<span class="co">#&gt; &lt;crate&gt; 4.65 kB</span>
-<span class="co">#&gt; * function: 4.14 kB</span>
+<span class="co">#&gt; &lt;crate&gt; 4.54KB</span>
+<span class="co">#&gt; * function: 4.05KB</span>
 <span class="co">#&gt; function (..., .x = ..1, .y = ..2, . = ..1) </span>
 <span class="co">#&gt; stats::lm(.x, data = list(mpg = c(21, 21, 22.8, 21.4, 18.7), </span>
 <span class="co">#&gt;     cyl = c(6, 6, 4, 6, 8), disp = c(160, 160, 108, 258, 360), </span>
@@ -191,6 +191,11 @@
 <span class="co">#&gt;       952.3       -207.8</span></code></pre></div>
 </div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
+</h2>
+<p>Please note that the carrier project is released with a <a href="https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html" class="external-link">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </div>
 </div>
 
