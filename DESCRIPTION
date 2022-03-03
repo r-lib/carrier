@@ -1,6 +1,6 @@
 Package: carrier
 Title: Isolate Functions for Remote Execution
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: c(
     person("Lionel", "Henry", ,"lionel@rstudio.com", c("aut", "cre")),
     person("RStudio", role = "cph")
