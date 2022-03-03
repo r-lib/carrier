@@ -1,5 +1,8 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/r-lib/external/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-lib/external/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 # carrier
 
@@ -119,9 +122,9 @@ crate(function(x) stats::var(x, na.rm = !!na_rm))
 
 However, be careful not to unquote large objects because:
 
-  - The sizes of unquoted objects are not detailed when you print the
+-   The sizes of unquoted objects are not detailed when you print the
     crate.
-  - Inlined data can cause noisy output.
+-   Inlined data can cause noisy output.
 
 Let’s unquote a data frame to see the noise caused by inlining:
 
