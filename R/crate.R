@@ -123,7 +123,7 @@ crate_sizes <- function(crate) {
   bare_fn <- unclass(crate)
   environment(bare_fn) <- global_env()
 
-  bare_size <- pryr::object_size(bare_fn)
+  bare_size <- lobstr::obj_size(bare_fn)
 
   env <- fn_env(crate)
   nms <- ls(env)
@@ -133,7 +133,7 @@ crate_sizes <- function(crate) {
   out[[1]] <- bare_size
 
   index <- seq2(2, n)
-  get_size <- function(nm) pryr::object_size(env[[nm]])
+  get_size <- function(nm) lobstr::obj_size(env[[nm]])
   out[index] <- lapply(nms, get_size)
 
   # Sort data by decreasing size but keep function first
@@ -148,7 +148,7 @@ crate_sizes <- function(crate) {
 print.crate <- function(x, ...) {
   sizes <- crate_sizes(x)
 
-  total_size <- format_bytes(pryr::object_size(x), ...)
+  total_size <- format_bytes(lobstr::obj_size(x), ...)
   cat(sprintf("<crate> %s\n", total_size))
 
   fn_size <- format_bytes(sizes[[1]], ...)

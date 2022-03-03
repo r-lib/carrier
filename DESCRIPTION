@@ -17,7 +17,7 @@ BugReports: https://github.com/r-lib/carrier/issues
 Depends:
     R (>= 3.4.0)
 Imports:
-    pryr,
+    lobstr,
     rlang (>= 1.0.1)
 Suggests:
     covr,
