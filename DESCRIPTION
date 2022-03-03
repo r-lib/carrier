@@ -2,28 +2,28 @@ Package: carrier
 Title: Isolate Functions for Remote Execution
 Version: 0.1.0.9000
 Authors@R: c(
-    person("Lionel", "Henry", ,"lionel@rstudio.com", c("aut", "cre")),
-    person("RStudio", role = "cph")
-    )
+    person("Lionel", "Henry", , "lionel@rstudio.com", role = c("aut", "cre")),
+    person("RStudio", role = c("cph", "fnd"))
+  )
 Description: Sending functions to remote processes can be wasteful of
-    resources because they carry their environments with them. With
-    the carrier package, it is easy to create functions that are
-    isolated from their environment. These isolated functions, also
-    called crates, print at the console with their total size and can
-    be easily tested locally before being sent to a remote.
+    resources because they carry their environments with them. With the
+    carrier package, it is easy to create functions that are isolated from
+    their environment. These isolated functions, also called crates, print
+    at the console with their total size and can be easily tested locally
+    before being sent to a remote.
+License: GPL-3
+URL: https://github.com/r-lib/carrier
+BugReports: https://github.com/r-lib/carrier/issues
 Depends:
     R (>= 3.1.0)
 Imports:
     pryr,
     rlang (>= 0.2.2)
 Suggests:
-    testthat,
-    covr
-License: GPL-3
+    covr,
+    testthat
+ByteCompile: true
 Encoding: UTF-8
 LazyData: true
-ByteCompile: true
-URL: https://github.com/r-lib/carrier
-BugReports: https://github.com/r-lib/carrier/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
