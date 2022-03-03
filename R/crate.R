@@ -44,18 +44,18 @@ NULL
 #' crate(function(x) stats::var(x))
 #'
 #' # Or the formula notation:
-#' crate(~stats::var(.x))
+#' crate(~ stats::var(.x))
 #'
 #' # Declare data by supplying named arguments. You can test you have
 #' # declared all necessary data by calling your crated function:
 #' na_rm <- TRUE
-#' fn <- crate(~stats::var(.x, na.rm = na_rm))
+#' fn <- crate(~ stats::var(.x, na.rm = na_rm))
 #' try(fn(1:10))
 #'
 #' # For small data it is handy to unquote instead. Unquoting inlines
 #' # objects inside the function. This is less verbose if your
 #' # function depends on many small objects:
-#' fn <- crate(~stats::var(.x, na.rm = !!na_rm))
+#' fn <- crate(~ stats::var(.x, na.rm = !!na_rm))
 #' fn(1:10)
 #'
 #' # One downside is that the individual sizes of unquoted objects
@@ -176,7 +176,7 @@ format.bytes <- function(x, digits = 3, ...) {
     unit <- "B"
   } else {
     unit <- c("kB", "MB", "GB", "TB")[[power]]
-    x <- x / (1000 ^ power)
+    x <- x / (1000^power)
   }
 
   x <- signif(x, digits = digits)

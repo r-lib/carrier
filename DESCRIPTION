@@ -26,4 +26,4 @@ ByteCompile: true
 URL: https://github.com/r-lib/carrier
 BugReports: https://github.com/r-lib/carrier/issues
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.2

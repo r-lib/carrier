@@ -15,29 +15,29 @@ test_that("crate() supports quasiquotation", {
   expect_identical(body(fn), quote(toupper("foo")))
   expect_identical(fn(), "FOO")
 
-  fn <- crate(~toupper(!!foo))
+  fn <- crate(~ toupper(!!foo))
   expect_identical(body(fn), quote(toupper("foo")))
   expect_identical(fn(), "FOO")
 })
 
 test_that("can supply data", {
-  fn <- crate(~toupper(foo), foo = "foo")
+  fn <- crate(~ toupper(foo), foo = "foo")
   expect_identical(fn(), "FOO")
 
   foo <- "foo"
-  fn <- crate(~toupper(foo), foo = foo)
+  fn <- crate(~ toupper(foo), foo = foo)
   expect_identical(fn(), "FOO")
 })
 
 test_that("can supply data before or after function", {
   foo <- "foo"
-  fn <- crate(foo = foo, ~toupper(foo))
+  fn <- crate(foo = foo, ~ toupper(foo))
   expect_identical(fn(), "FOO")
 })
 
 test_that("fails if relevant data not supplied", {
   foobar <- "foobar"
-  fn <- crate(foo = "foo", ~toupper(foobar))
+  fn <- crate(foo = "foo", ~ toupper(foobar))
   expect_error(fn(), "not found")
 })
 
@@ -45,14 +45,14 @@ test_that("can supply data in a block", {
   fn <- crate({
     foo <- "foo"
     bar <- "bar"
-    ~paste(foo, bar)
+    ~ paste(foo, bar)
   })
 
   expect_data(fn, "foo", "bar")
 })
 
 test_that("crated function roundtrips under serialisation", {
-  fn <- crate(~toupper(foo), foo = "foo")
+  fn <- crate(~ toupper(foo), foo = "foo")
   out <- unserialize(serialize(fn, NULL))
   expect_equal(fn_env(fn), fn_env(out))
   expect_identical(fn(), out())

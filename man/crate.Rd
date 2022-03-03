@@ -39,7 +39,7 @@ the exception of the base package. For instance \code{var()} from the
 stats package must be called with its namespace prefix:
 \code{stats::var(x)}.
 \item They should declare any data they depend on. You can declare data
-by supplying additional arguments or by unquoting objects with \code{!!}.
+by supplying additional arguments or by unquoting objects with \verb{!!}.
 }
 }
 
@@ -48,18 +48,18 @@ by supplying additional arguments or by unquoting objects with \code{!!}.
 crate(function(x) stats::var(x))
 
 # Or the formula notation:
-crate(~stats::var(.x))
+crate(~ stats::var(.x))
 
 # Declare data by supplying named arguments. You can test you have
 # declared all necessary data by calling your crated function:
 na_rm <- TRUE
-fn <- crate(~stats::var(.x, na.rm = na_rm))
+fn <- crate(~ stats::var(.x, na.rm = na_rm))
 try(fn(1:10))
 
 # For small data it is handy to unquote instead. Unquoting inlines
 # objects inside the function. This is less verbose if your
 # function depends on many small objects:
-fn <- crate(~stats::var(.x, na.rm = !!na_rm))
+fn <- crate(~ stats::var(.x, na.rm = !!na_rm))
 fn(1:10)
 
 # One downside is that the individual sizes of unquoted objects
