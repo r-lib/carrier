@@ -78,9 +78,9 @@ test_that("sizes are printed with the crate", {
   attributes(bare_fn) <- NULL
   environment(bare_fn) <- global_env()
 
-  bare_size <- format(pryr::object_size(bare_fn))
-  bar_size <- format(pryr::object_size(bar))
-  foo_size <- format(pryr::object_size(foo))
+  bare_size <- format_bytes(pryr::object_size(bare_fn))
+  bar_size <- format_bytes(pryr::object_size(bar))
+  foo_size <- format_bytes(pryr::object_size(foo))
 
   output <- "
 * function: %s
@@ -98,7 +98,7 @@ test_that("empty crates are printed correctly", {
   attributes(bare_fn) <- NULL
   environment(bare_fn) <- global_env()
 
-  bare_size <- format(pryr::object_size(bare_fn))
+  bare_size <- format_bytes(pryr::object_size(bare_fn))
 
   output <- "
 * function: %s

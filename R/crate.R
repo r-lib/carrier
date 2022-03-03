@@ -148,16 +148,16 @@ crate_sizes <- function(crate) {
 print.crate <- function(x, ...) {
   sizes <- crate_sizes(x)
 
-  total_size <- format(pryr::object_size(x), ...)
+  total_size <- format_bytes(pryr::object_size(x), ...)
   cat(sprintf("<crate> %s\n", total_size))
 
-  fn_size <- format(sizes[[1]], ...)
+  fn_size <- format_bytes(sizes[[1]], ...)
   cat(sprintf("* function: %s\n", fn_size))
 
   nms <- names(sizes)
   for (i in seq2_along(2, sizes)) {
     nm <- nms[[i]]
-    size <- format(sizes[[i]], ...)
+    size <- format_bytes(sizes[[i]], ...)
     cat(sprintf("* `%s`: %s\n", nm, size))
   }
 
@@ -169,17 +169,6 @@ print.crate <- function(x, ...) {
   invisible(x)
 }
 
-# From pryr
-format.bytes <- function(x, digits = 3, ...) {
-  power <- min(floor(log(abs(x), 1000)), 4)
-  if (power < 1) {
-    unit <- "B"
-  } else {
-    unit <- c("kB", "MB", "GB", "TB")[[power]]
-    x <- x / (1000^power)
-  }
-
-  x <- signif(x, digits = digits)
-  fmt <- format(unclass(x), big.mark = ",", scientific = FALSE)
-  paste(fmt, unit)
+format_bytes <- function(x) {
+  format(as_bytes(unclass(x)))
 }
