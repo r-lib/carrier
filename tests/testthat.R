@@ -1,4 +1,4 @@
-library("testthat")
-library("carrier")
+library(testthat)
+library(carrier)
 
 test_check("carrier")

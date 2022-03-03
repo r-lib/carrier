@@ -1,7 +1,9 @@
-context("crate")
-
 test_that("crate() supports lambda syntax", {
-  expect_equal(crate(~NULL), new_crate(as_function(~NULL)))
+  expect_equal(
+    crate(~NULL),
+    new_crate(as_function(~NULL, env = current_env())),
+    ignore_function_env = TRUE
+  )
 })
 
 test_that("crate() requires functions", {
@@ -54,8 +56,8 @@ test_that("can supply data in a block", {
 test_that("crated function roundtrips under serialisation", {
   fn <- crate(~ toupper(foo), foo = "foo")
   out <- unserialize(serialize(fn, NULL))
-  expect_equal(fn_env(fn), fn_env(out))
-  expect_identical(fn(), out())
+  expect_equal(as.list(fn_env(fn)), as.list(fn_env(out)))
+  expect_equal(fn(), out())
 })
 
 test_that("new_crate() requires functions", {
@@ -64,7 +66,7 @@ test_that("new_crate() requires functions", {
 })
 
 test_that("new_crate() crates", {
-  expect_is(new_crate(function() NULL), "crate")
+  expect_s3_class(new_crate(function() NULL), "crate")
 })
 
 test_that("sizes are printed with the crate", {
@@ -110,5 +112,5 @@ test_that("function must be defined in the crate environment", {
   fn <- function() NULL
   expect_error(crate(fn), "must be defined inside")
 
-  expect_is(crate(set_env(fn)), "crate")
+  expect_s3_class(crate(set_env(fn)), "crate")
 })
