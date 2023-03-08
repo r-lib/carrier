@@ -6,6 +6,12 @@
 
 # carrier
 
+[![Lifecycle:
+superseded](https://img.shields.io/badge/lifecycle-superseded-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+
+**Superseded**: carrier is superseded in favour of
+[bundle](https://rstudio.github.io/bundle/).
+
 The carrier package provides tools to package up functions so they can
 be sent to remote R sessions or to different processes, and tools to
 test your crates locally. They make it easy to control what data should
@@ -24,8 +30,8 @@ functions using the standard R syntax:
 
 ``` r
 crate(function(x) mean(x, na.rm = TRUE))
-#> <crate> 6.84KB
-#> * function: 6.4KB
+#> <crate> 7 kB
+#> * function: 6.55 kB
 #> function(x) mean(x, na.rm = TRUE)
 ```
 
@@ -33,8 +39,8 @@ Or with a purrr-like lambda syntax:
 
 ``` r
 crate(~mean(.x, na.rm = TRUE))
-#> <crate> 1.53KB
-#> * function: 1008B
+#> <crate> 1.57 kB
+#> * function: 1.01 kB
 #> function (..., .x = ..1, .y = ..2, . = ..1) 
 #> mean(.x, na.rm = TRUE)
 ```
@@ -100,9 +106,9 @@ the crated function:
 
 ``` r
 fn
-#> <crate> 9.09KB
-#> * function: 8.55KB
-#> * `na_rm`: 56B
+#> <crate> 9.31 kB
+#> * function: 8.75 kB
+#> * `na_rm`: 56 B
 #> function(x) stats::var(x, na.rm = na_rm)
 ```
 
@@ -115,8 +121,8 @@ function.
 
 ``` r
 crate(function(x) stats::var(x, na.rm = !!na_rm))
-#> <crate> 7.68KB
-#> * function: 7.24KB
+#> <crate> 7.86 kB
+#> * function: 7.42 kB
 #> function(x) stats::var(x, na.rm = !!na_rm)
 ```
 
@@ -140,8 +146,8 @@ This crate will print with noisy inlined data:
 
 ``` r
 fn
-#> <crate> 4.54KB
-#> * function: 4.05KB
+#> <crate> 4.65 kB
+#> * function: 4.14 kB
 #> function (..., .x = ..1, .y = ..2, . = ..1) 
 #> stats::lm(.x, data = list(mpg = c(21, 21, 22.8, 21.4, 18.7), 
 #>     cyl = c(6, 6, 4, 6, 8), disp = c(160, 160, 108, 258, 360), 
