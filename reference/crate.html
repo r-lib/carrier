@@ -68,7 +68,7 @@ below.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">crate</span><span class="op">(</span><span class="va">.fn</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">crate</span><span class="op">(</span><span class="va">.fn</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -79,10 +79,13 @@ they should be declared in the call to <code>crate()</code>. See examples if
 you need to crate a function that is already defined. Formulas
 are converted to purrr-like lambda functions using
 <code><a href="https://rlang.r-lib.org/reference/as_function.html" class="external-link">rlang::as_function()</a></code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Arguments to declare in the environment of <code>.fn</code>. If a
 name is supplied, the object is assigned to that name. Otherwise
 the argument is automatically named after itself.</p></dd>
+
 </dl></div>
     <div id="creating-self-contained-functions">
     <h2>Creating self-contained functions</h2>
@@ -99,56 +102,56 @@ by supplying additional arguments or by unquoting objects with <code>!!</code>.<
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># You can create functions using the ordinary notation:</span></span>
-<span class="r-in"><span class="fu">crate</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;crate&gt; 18.3KB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * function: 17.9KB</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># You can create functions using the ordinary notation:</span></span></span>
+<span class="r-in"><span><span class="fu">crate</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;crate&gt; 18.77 kB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * function: 18.32 kB</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) stats::var(x)</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Or the formula notation:</span></span>
-<span class="r-in"><span class="fu">crate</span><span class="op">(</span><span class="op">~</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;crate&gt; 1.64KB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * function: 1.09KB</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Or the formula notation:</span></span></span>
+<span class="r-in"><span><span class="fu">crate</span><span class="op">(</span><span class="op">~</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;crate&gt; 1.68 kB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * function: 1.12 kB</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (..., .x = ..1, .y = ..2, . = ..1) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stats::var(.x)</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Declare data by supplying named arguments. You can test you have</span></span>
-<span class="r-in"><span class="co"># declared all necessary data by calling your crated function:</span></span>
-<span class="r-in"><span class="va">na_rm</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
-<span class="r-in"><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu">crate</span><span class="op">(</span><span class="op">~</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">.x</span>, na.rm <span class="op">=</span> <span class="va">na_rm</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Declare data by supplying named arguments. You can test you have</span></span></span>
+<span class="r-in"><span><span class="co"># declared all necessary data by calling your crated function:</span></span></span>
+<span class="r-in"><span><span class="va">na_rm</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu">crate</span><span class="op">(</span><span class="op">~</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">.x</span>, na.rm <span class="op">=</span> <span class="va">na_rm</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error in stats::var(.x, na.rm = na_rm) : object 'na_rm' not found</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># For small data it is handy to unquote instead. Unquoting inlines</span></span>
-<span class="r-in"><span class="co"># objects inside the function. This is less verbose if your</span></span>
-<span class="r-in"><span class="co"># function depends on many small objects:</span></span>
-<span class="r-in"><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu">crate</span><span class="op">(</span><span class="op">~</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">.x</span>, na.rm <span class="op">=</span> <span class="op">!</span><span class="op">!</span><span class="va">na_rm</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># For small data it is handy to unquote instead. Unquoting inlines</span></span></span>
+<span class="r-in"><span><span class="co"># objects inside the function. This is less verbose if your</span></span></span>
+<span class="r-in"><span><span class="co"># function depends on many small objects:</span></span></span>
+<span class="r-in"><span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu">crate</span><span class="op">(</span><span class="op">~</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">.x</span>, na.rm <span class="op">=</span> <span class="op">!</span><span class="op">!</span><span class="va">na_rm</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 9.166667</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># One downside is that the individual sizes of unquoted objects</span></span>
-<span class="r-in"><span class="co"># won't be shown in the crate printout:</span></span>
-<span class="r-in"><span class="va">fn</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;crate&gt; 1.8KB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * function: 1.26KB</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># One downside is that the individual sizes of unquoted objects</span></span></span>
+<span class="r-in"><span><span class="co"># won't be shown in the crate printout:</span></span></span>
+<span class="r-in"><span><span class="va">fn</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;crate&gt; 1.85 kB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * function: 1.29 kB</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (..., .x = ..1, .y = ..2, . = ..1) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stats::var(.x, na.rm = TRUE)</span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># The function or formula you pass to crate() should defined inside</span></span>
-<span class="r-in"><span class="co"># the crate() call, i.e. you can't pass an already defined</span></span>
-<span class="r-in"><span class="co"># function:</span></span>
-<span class="r-in"><span class="va">fn</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">toupper</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">crate</span><span class="op">(</span><span class="va">fn</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># The function or formula you pass to crate() should defined inside</span></span></span>
+<span class="r-in"><span><span class="co"># the crate() call, i.e. you can't pass an already defined</span></span></span>
+<span class="r-in"><span><span class="co"># function:</span></span></span>
+<span class="r-in"><span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">toupper</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">crate</span><span class="op">(</span><span class="va">fn</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error in crate(fn) : </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   The function must be defined inside the `crate()` call</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># If you really need to crate an existing function, you can</span></span>
-<span class="r-in"><span class="co"># explicitly set its environment to the crate environment with the</span></span>
-<span class="r-in"><span class="co"># set_env() function from rlang:</span></span>
-<span class="r-in"><span class="fu">crate</span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/get_env.html" class="external-link">set_env</a></span><span class="op">(</span><span class="va">fn</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;crate&gt; 18.1KB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * function: 17.6KB</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># If you really need to crate an existing function, you can</span></span></span>
+<span class="r-in"><span><span class="co"># explicitly set its environment to the crate environment with the</span></span></span>
+<span class="r-in"><span><span class="co"># set_env() function from rlang:</span></span></span>
+<span class="r-in"><span><span class="fu">crate</span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/get_env.html" class="external-link">set_env</a></span><span class="op">(</span><span class="va">fn</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;crate&gt; 18.49 kB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * function: 18.04 kB</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) toupper(x)</span>
 </code></pre></div>
     </div>
@@ -160,11 +163,11 @@ by supplying additional arguments or by unquoting objects with <code>!!</code>.<
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Lionel Henry, RStudio.</p>
+  <p></p><p>Developed by Lionel Henry, Posit Software, PBC.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

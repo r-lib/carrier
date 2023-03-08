@@ -75,6 +75,8 @@
 <div class="section level1">
 <div class="page-header"><h1 id="carrier">carrier<a class="anchor" aria-label="anchor" href="#carrier"></a>
 </h1></div>
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://img.shields.io/badge/lifecycle-superseded-blue.svg" alt="Lifecycle: superseded"></a></p>
+<p><strong>Superseded</strong>: carrier is superseded in favour of <a href="https://rstudio.github.io/bundle/" class="external-link">bundle</a>.</p>
 <p>The carrier package provides tools to package up functions so they can be sent to remote R sessions or to different processes, and tools to test your crates locally. They make it easy to control what data should be packaged with the function and what size your crated function is.</p>
 <p>Currently, carrier only provides a strict function constructor that forces you to be explicit about the functions and the data your function depends on. In the future it will also provide tools to figure it out automatically.</p>
 <div class="section level2">
@@ -82,71 +84,71 @@
 </h2>
 <p><code><a href="reference/crate.html">crate()</a></code> is a function constructor that forces you to be explicit about which data should be packaged with the function. You can create functions using the standard R syntax:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; &lt;crate&gt; 6.84KB</span>
-<span class="co">#&gt; * function: 6.4KB</span>
-<span class="co">#&gt; function(x) mean(x, na.rm = TRUE)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;crate&gt; 7 kB</span></span>
+<span><span class="co">#&gt; * function: 6.55 kB</span></span>
+<span><span class="co">#&gt; function(x) mean(x, na.rm = TRUE)</span></span></code></pre></div>
 <p>Or with a purrr-like lambda syntax:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">.x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; &lt;crate&gt; 1.53KB</span>
-<span class="co">#&gt; * function: 1008B</span>
-<span class="co">#&gt; function (..., .x = ..1, .y = ..2, . = ..1) </span>
-<span class="co">#&gt; mean(.x, na.rm = TRUE)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">.x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;crate&gt; 1.57 kB</span></span>
+<span><span class="co">#&gt; * function: 1.01 kB</span></span>
+<span><span class="co">#&gt; function (..., .x = ..1, .y = ..2, . = ..1) </span></span>
+<span><span class="co">#&gt; mean(.x, na.rm = TRUE)</span></span></code></pre></div>
 <p>The crated function prints with its total size in the header, so you know how much data you will send to remotes. The size of the bare function without any data is also printed in the first bullet, and if you add objects to the crate their size is printed in decreasing order.</p>
 <div class="section level3">
 <h3 id="explicit-namespaces">Explicit namespaces<a class="anchor" aria-label="anchor" href="#explicit-namespaces"></a>
 </h3>
 <p><code><a href="reference/crate.html">crate()</a></code> requires you to be explicit about all dependencies of your function. Except for base functions, you have to call functions with their namespace prefix. You can test your function locally to make sure you’ve been explicit enough. In the following example we forgot to specify that <code><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var()</a></code> comes from the stats namespace:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span>
-<span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; Error in var(.x): could not find function "var"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in var(.x): could not find function "var"</span></span></code></pre></div>
 <p>So let’s add the namespace prefix:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="op">~</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span>
-<span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; [1] 9.166667</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="op">~</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 9.166667</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="explicit-data">Explicit data<a class="anchor" aria-label="anchor" href="#explicit-data"></a>
 </h3>
 <p>If your function depends on global data, you need to declare it to make it available to your crated function. Here we forgot to declare <code>na_rm</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">na_rm</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
-
-<span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">na_rm</span><span class="op">)</span><span class="op">)</span>
-<span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; Error in stats::var(x, na.rm = na_rm): object 'na_rm' not found</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">na_rm</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
+<span></span>
+<span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">na_rm</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in stats::var(x, na.rm = na_rm): object 'na_rm' not found</span></span></code></pre></div>
 <p>There are two techniques for packaging data into your crate: passing data as arguments, and unquoting data in the function.</p>
 <div class="section level4">
 <h4 id="passing-data-as-arguments">Passing data as arguments<a class="anchor" aria-label="anchor" href="#passing-data-as-arguments"></a>
 </h4>
 <p>You can declare objects by passing them as named arguments to <code><a href="reference/crate.html">crate()</a></code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span>
-  <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">na_rm</span><span class="op">)</span>,
-  na_rm <span class="op">=</span> <span class="va">na_rm</span>
-<span class="op">)</span>
-<span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; [1] 9.166667</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span></span>
+<span>  <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">na_rm</span><span class="op">)</span>,</span>
+<span>  na_rm <span class="op">=</span> <span class="va">na_rm</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 9.166667</span></span></code></pre></div>
 <p>Note how the size of each imported object is displayed when you print the crated function:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fn</span>
-<span class="co">#&gt; &lt;crate&gt; 9.09KB</span>
-<span class="co">#&gt; * function: 8.55KB</span>
-<span class="co">#&gt; * `na_rm`: 56B</span>
-<span class="co">#&gt; function(x) stats::var(x, na.rm = na_rm)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fn</span></span>
+<span><span class="co">#&gt; &lt;crate&gt; 9.31 kB</span></span>
+<span><span class="co">#&gt; * function: 8.75 kB</span></span>
+<span><span class="co">#&gt; * `na_rm`: 56 B</span></span>
+<span><span class="co">#&gt; function(x) stats::var(x, na.rm = na_rm)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="unquoting-data-in-the-function">Unquoting data in the function<a class="anchor" aria-label="anchor" href="#unquoting-data-in-the-function"></a>
 </h4>
 <p>Another way of packaging data is to unquote objects with <code>!!</code>. This works because unquoting inlines objects in function calls. Unquoting can be less verbose if you have many small objects to import inside the function.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="op">!</span><span class="op">!</span><span class="va">na_rm</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; &lt;crate&gt; 7.68KB</span>
-<span class="co">#&gt; * function: 7.24KB</span>
-<span class="co">#&gt; function(x) stats::var(x, na.rm = !!na_rm)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="op">!</span><span class="op">!</span><span class="va">na_rm</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;crate&gt; 7.86 kB</span></span>
+<span><span class="co">#&gt; * function: 7.42 kB</span></span>
+<span><span class="co">#&gt; function(x) stats::var(x, na.rm = !!na_rm)</span></span></code></pre></div>
 <p>However, be careful not to unquote large objects because:</p>
 <ul>
 <li>The sizes of unquoted objects are not detailed when you print the crate.</li>
@@ -154,41 +156,41 @@
 </ul>
 <p>Let’s unquote a data frame to see the noise caused by inlining:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Subset a few rows so the call is not too noisy</span>
-<span class="va">data</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span>
-
-<span class="co"># Inline data in call by unquoting</span>
-<span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="op">~</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">.x</span>, data <span class="op">=</span> <span class="op">!</span><span class="op">!</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Subset a few rows so the call is not too noisy</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="co"># Inline data in call by unquoting</span></span>
+<span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="op">~</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">.x</span>, data <span class="op">=</span> <span class="op">!</span><span class="op">!</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>This crate will print with noisy inlined data:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fn</span>
-<span class="co">#&gt; &lt;crate&gt; 4.54KB</span>
-<span class="co">#&gt; * function: 4.05KB</span>
-<span class="co">#&gt; function (..., .x = ..1, .y = ..2, . = ..1) </span>
-<span class="co">#&gt; stats::lm(.x, data = list(mpg = c(21, 21, 22.8, 21.4, 18.7), </span>
-<span class="co">#&gt;     cyl = c(6, 6, 4, 6, 8), disp = c(160, 160, 108, 258, 360), </span>
-<span class="co">#&gt;     hp = c(110, 110, 93, 110, 175), drat = c(3.9, 3.9, 3.85, </span>
-<span class="co">#&gt;     3.08, 3.15), wt = c(2.62, 2.875, 2.32, 3.215, 3.44), qsec = c(16.46, </span>
-<span class="co">#&gt;     17.02, 18.61, 19.44, 17.02), vs = c(0, 0, 1, 1, 0), am = c(1, </span>
-<span class="co">#&gt;     1, 1, 0, 0), gear = c(4, 4, 4, 3, 3), carb = c(4, 4, 1, 1, </span>
-<span class="co">#&gt;     2)))</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fn</span></span>
+<span><span class="co">#&gt; &lt;crate&gt; 4.65 kB</span></span>
+<span><span class="co">#&gt; * function: 4.14 kB</span></span>
+<span><span class="co">#&gt; function (..., .x = ..1, .y = ..2, . = ..1) </span></span>
+<span><span class="co">#&gt; stats::lm(.x, data = list(mpg = c(21, 21, 22.8, 21.4, 18.7), </span></span>
+<span><span class="co">#&gt;     cyl = c(6, 6, 4, 6, 8), disp = c(160, 160, 108, 258, 360), </span></span>
+<span><span class="co">#&gt;     hp = c(110, 110, 93, 110, 175), drat = c(3.9, 3.9, 3.85, </span></span>
+<span><span class="co">#&gt;     3.08, 3.15), wt = c(2.62, 2.875, 2.32, 3.215, 3.44), qsec = c(16.46, </span></span>
+<span><span class="co">#&gt;     17.02, 18.61, 19.44, 17.02), vs = c(0, 0, 1, 1, 0), am = c(1, </span></span>
+<span><span class="co">#&gt;     1, 1, 0, 0), gear = c(4, 4, 4, 3, 3), carb = c(4, 4, 1, 1, </span></span>
+<span><span class="co">#&gt;     2)))</span></span></code></pre></div>
 <p>Same for the function call recorded by <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">fn</span><span class="op">(</span><span class="va">disp</span> <span class="op">~</span> <span class="va">drat</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Call:</span>
-<span class="co">#&gt; stats::lm(formula = .x, data = structure(list(mpg = c(21, 21, </span>
-<span class="co">#&gt; 22.8, 21.4, 18.7), cyl = c(6, 6, 4, 6, 8), disp = c(160, 160, </span>
-<span class="co">#&gt; 108, 258, 360), hp = c(110, 110, 93, 110, 175), drat = c(3.9, </span>
-<span class="co">#&gt; 3.9, 3.85, 3.08, 3.15), wt = c(2.62, 2.875, 2.32, 3.215, 3.44</span>
-<span class="co">#&gt; ), qsec = c(16.46, 17.02, 18.61, 19.44, 17.02), vs = c(0, 0, </span>
-<span class="co">#&gt; 1, 1, 0), am = c(1, 1, 1, 0, 0), gear = c(4, 4, 4, 3, 3), carb = c(4, </span>
-<span class="co">#&gt; 4, 1, 1, 2)), row.names = c("Mazda RX4", "Mazda RX4 Wag", "Datsun 710", </span>
-<span class="co">#&gt; "Hornet 4 Drive", "Hornet Sportabout"), class = "data.frame"))</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Coefficients:</span>
-<span class="co">#&gt; (Intercept)         drat  </span>
-<span class="co">#&gt;       952.3       -207.8</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">fn</span><span class="op">(</span><span class="va">disp</span> <span class="op">~</span> <span class="va">drat</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; stats::lm(formula = .x, data = structure(list(mpg = c(21, 21, </span></span>
+<span><span class="co">#&gt; 22.8, 21.4, 18.7), cyl = c(6, 6, 4, 6, 8), disp = c(160, 160, </span></span>
+<span><span class="co">#&gt; 108, 258, 360), hp = c(110, 110, 93, 110, 175), drat = c(3.9, </span></span>
+<span><span class="co">#&gt; 3.9, 3.85, 3.08, 3.15), wt = c(2.62, 2.875, 2.32, 3.215, 3.44</span></span>
+<span><span class="co">#&gt; ), qsec = c(16.46, 17.02, 18.61, 19.44, 17.02), vs = c(0, 0, </span></span>
+<span><span class="co">#&gt; 1, 1, 0), am = c(1, 1, 1, 0, 0), gear = c(4, 4, 4, 3, 3), carb = c(4, </span></span>
+<span><span class="co">#&gt; 4, 1, 1, 2)), row.names = c("Mazda RX4", "Mazda RX4 Wag", "Datsun 710", </span></span>
+<span><span class="co">#&gt; "Hornet 4 Drive", "Hornet Sportabout"), class = "data.frame"))</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Coefficients:</span></span>
+<span><span class="co">#&gt; (Intercept)         drat  </span></span>
+<span><span class="co">#&gt;       952.3       -207.8</span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -214,7 +216,8 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
 
@@ -236,7 +239,7 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Lionel Henry <br><small class="roles"> Author, maintainer </small>  </li>
-<li>RStudio <br><small class="roles"> Copyright holder, funder </small>  </li>
+<li>Posit Software, PBC <br><small class="roles"> Copyright holder, funder </small>  </li>
 </ul>
 </div>
 
@@ -253,12 +256,12 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Lionel Henry, RStudio.</p>
+<p>Developed by Lionel Henry, Posit Software, PBC.</p>
 </div>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
