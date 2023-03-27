@@ -75,10 +75,9 @@
 <div class="section level1">
 <div class="page-header"><h1 id="carrier">carrier<a class="anchor" aria-label="anchor" href="#carrier"></a>
 </h1></div>
-<p><a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://img.shields.io/badge/lifecycle-superseded-blue.svg" alt="Lifecycle: superseded"></a></p>
-<p><strong>Superseded</strong>: carrier is superseded in favour of <a href="https://rstudio.github.io/bundle/" class="external-link">bundle</a>.</p>
 <p>The carrier package provides tools to package up functions so they can be sent to remote R sessions or to different processes, and tools to test your crates locally. They make it easy to control what data should be packaged with the function and what size your crated function is.</p>
 <p>Currently, carrier only provides a strict function constructor that forces you to be explicit about the functions and the data your function depends on. In the future it will also provide tools to figure it out automatically.</p>
+<p>See also the <a href="https://rstudio.github.io/bundle/" class="external-link">bundle</a> package for the tidymodels ecosystem.</p>
 <div class="section level2">
 <h2 id="creating-explicit-crated-functions">Creating explicit crated functions<a class="anchor" aria-label="anchor" href="#creating-explicit-crated-functions"></a>
 </h2>
@@ -119,7 +118,7 @@
 <span></span>
 <span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">na_rm</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in stats::var(x, na.rm = na_rm): object 'na_rm' not found</span></span></code></pre></div>
+<span><span class="co">#&gt; Error in fn(1:10): object 'na_rm' not found</span></span></code></pre></div>
 <p>There are two techniques for packaging data into your crate: passing data as arguments, and unquoting data in the function.</p>
 <div class="section level4">
 <h4 id="passing-data-as-arguments">Passing data as arguments<a class="anchor" aria-label="anchor" href="#passing-data-as-arguments"></a>
