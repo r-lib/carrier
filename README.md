@@ -6,12 +6,6 @@
 
 # carrier
 
-[![Lifecycle:
-superseded](https://img.shields.io/badge/lifecycle-superseded-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-
-**Superseded**: carrier is superseded in favour of
-[bundle](https://rstudio.github.io/bundle/).
-
 The carrier package provides tools to package up functions so they can
 be sent to remote R sessions or to different processes, and tools to
 test your crates locally. They make it easy to control what data should
@@ -21,6 +15,9 @@ Currently, carrier only provides a strict function constructor that
 forces you to be explicit about the functions and the data your function
 depends on. In the future it will also provide tools to figure it out
 automatically.
+
+See also the [bundle](https://rstudio.github.io/bundle/) package for the
+tidymodels ecosystem.
 
 ## Creating explicit crated functions
 
@@ -82,7 +79,7 @@ na_rm <- TRUE
 
 fn <- crate(function(x) stats::var(x, na.rm = na_rm))
 fn(1:10)
-#> Error in stats::var(x, na.rm = na_rm): object 'na_rm' not found
+#> Error in fn(1:10): object 'na_rm' not found
 ```
 
 There are two techniques for packaging data into your crate: passing
