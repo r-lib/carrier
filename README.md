@@ -1,7 +1,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/r-lib/external/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-lib/external/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/r-lib/carrier/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-lib/carrier/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 # carrier
