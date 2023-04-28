@@ -97,6 +97,9 @@ crate <- function(.fn, ...) {
     abort("The function must be defined inside the `crate()` call")
   }
 
+  # Remove potentially heavy srcrefs (#6)
+  fn <- zap_srcref(fn)
+
   new_crate(fn)
 }
 
