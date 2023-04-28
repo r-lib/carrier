@@ -26,7 +26,7 @@ below."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/math
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">carrier</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
       </span>
     </div>
 
@@ -104,9 +104,10 @@ by supplying additional arguments or by unquoting objects with <code>!!</code>.<
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># You can create functions using the ordinary notation:</span></span></span>
 <span class="r-in"><span><span class="fu">crate</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;crate&gt; 18.77 kB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * function: 18.32 kB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> function(x) stats::var(x)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;crate&gt; 1.23 kB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * function: 672 B</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function (x) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stats::var(x)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Or the formula notation:</span></span></span>
 <span class="r-in"><span><span class="fu">crate</span><span class="op">(</span><span class="op">~</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -120,7 +121,7 @@ by supplying additional arguments or by unquoting objects with <code>!!</code>.<
 <span class="r-in"><span><span class="va">na_rm</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu">crate</span><span class="op">(</span><span class="op">~</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">.x</span>, na.rm <span class="op">=</span> <span class="va">na_rm</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in stats::var(.x, na.rm = na_rm) : object 'na_rm' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in fn(1:10) : object 'na_rm' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># For small data it is handy to unquote instead. Unquoting inlines</span></span></span>
 <span class="r-in"><span><span class="co"># objects inside the function. This is less verbose if your</span></span></span>
@@ -150,9 +151,10 @@ by supplying additional arguments or by unquoting objects with <code>!!</code>.<
 <span class="r-in"><span><span class="co"># explicitly set its environment to the crate environment with the</span></span></span>
 <span class="r-in"><span><span class="co"># set_env() function from rlang:</span></span></span>
 <span class="r-in"><span><span class="fu">crate</span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/get_env.html" class="external-link">set_env</a></span><span class="op">(</span><span class="va">fn</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;crate&gt; 18.49 kB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * function: 18.04 kB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> function(x) toupper(x)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;crate&gt; 952 B</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * function: 392 B</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function (x) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> toupper(x)</span>
 </code></pre></div>
     </div>
   </div>
