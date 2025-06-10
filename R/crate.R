@@ -108,7 +108,11 @@ new_crate <- function(crate) {
   if (!is_function(crate)) {
     abort("`crate` must be a function")
   }
-
+  env <- environment(crate)
+  env[["library"]] <- function(...) {
+    library(...)
+    env_poke_parent(env, global_env())
+  }
   structure(crate, class = "crate")
 }
 
