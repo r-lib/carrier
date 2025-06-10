@@ -1,6 +1,14 @@
 #' @import rlang
 NULL
 
+shim_env <- new_environment(
+  data = list(library = function(...) {
+    library(...)
+    env_poke_parent(caller_env(), global_env())
+  }),
+  parent = base_env()
+)
+
 #' Crate a function to share with another process
 #'
 #' @description
@@ -85,7 +93,7 @@ crate <- function(.fn, ...) {
   fn <- eval_bare(enexpr(.fn), env)
 
   # Isolate the evaluation environment from the search path
-  env_poke_parent(env, base_env())
+  env_poke_parent(env, shim_env)
 
   if (is_formula(fn)) {
     fn <- as_function(fn)
@@ -108,11 +116,6 @@ new_crate <- function(crate) {
   if (!is_function(crate)) {
     abort("`crate` must be a function")
   }
-  env <- environment(crate)
-  env[["library"]] <- function(...) {
-    library(...)
-    env_poke_parent(env, global_env())
-  }
   structure(crate, class = "crate")
 }
 
@@ -134,7 +137,6 @@ crate_sizes <- function(crate) {
 
   env <- fn_env(crate)
   nms <- ls(env)
-  nms <- nms[nms != "library"]
 
   n <- length(nms) + 1
   out <- new_list(n, c("function", nms))
