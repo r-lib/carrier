@@ -134,6 +134,7 @@ crate_sizes <- function(crate) {
 
   env <- fn_env(crate)
   nms <- ls(env)
+  nms <- nms[nms != "library"]
 
   n <- length(nms) + 1
   out <- new_list(n, c("function", nms))
