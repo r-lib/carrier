@@ -4,7 +4,7 @@
 \alias{crate}
 \title{Crate a function to share with another process}
 \usage{
-crate(.fn, ..., parent_env = baseenv())
+crate(.fn, ..., .parent_env = baseenv())
 }
 \arguments{
 \item{.fn}{A fresh formula or function. "Fresh" here means that
@@ -17,7 +17,7 @@ are converted to purrr-like lambda functions using
 name is supplied, the object is assigned to that name. Otherwise
 the argument is automatically named after itself.}
 
-\item{parent_env}{The default of \code{baseenv()} ensures that the evaluation
+\item{.parent_env}{The default of \code{baseenv()} ensures that the evaluation
 environment of the crate is isolated from the search path. Specifying
 another environment such as the global environment allows this condition to
 be relaxed (but at the expense of no longer being able to rely on a local
