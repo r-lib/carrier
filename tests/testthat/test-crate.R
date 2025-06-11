@@ -6,6 +6,15 @@ test_that("crate() supports lambda syntax", {
   )
 })
 
+test_that("crate() requires named `...` arguments", {
+  expect_error(
+    crate(function(x) identity(x), x = 1, y = 2, 3),
+    "arguments must be named"
+  )
+  expect_no_error(crate(function(x) identity(x), x = 1, y = 2))
+  expect_no_error(crate(function(x) identity(x)))
+})
+
 test_that("crate() requires functions", {
   expect_error(crate(1), "must evaluate to a function")
 })
