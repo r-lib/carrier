@@ -7,6 +7,9 @@
   serialized by name rather than by value, the crate is still isolated from
   objects in the global environment (#16).
 
+* `crate()` now requires all `...` arguments to be named instead of silently
+  dropping unnamed arguments (#15).
+
 # carrier 0.1.1
 
 * Crated functions no longer carry source references (#6).
