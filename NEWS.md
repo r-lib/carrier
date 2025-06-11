@@ -1,5 +1,8 @@
 # carrier (development version)
 
+* `crate()` gains argument `parent_env`to govern whether a crate environment
+  should be isolated from the search path, as it is by default (#16).
+
 # carrier 0.1.1
 
 * Crated functions no longer carry source references (#6).
