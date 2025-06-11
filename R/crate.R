@@ -78,7 +78,7 @@ NULL
 #' # explicitly set its environment to the crate environment with the
 #' # set_env() function from rlang:
 #' crate(rlang::set_env(fn))
-crate <- function(.fn, ..., parent_env = baseenv()) {
+crate <- function(.fn, ..., .parent_env = baseenv()) {
   # Evaluate arguments in a child of the caller so the caller context
   # is in scope and new data is created in a separate child
   env <- child_env(caller_env())
