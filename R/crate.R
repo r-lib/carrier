@@ -34,9 +34,7 @@ NULL
 #'   you need to crate a function that is already defined. Formulas
 #'   are converted to purrr-like lambda functions using
 #'   [rlang::as_function()].
-#' @param ... Arguments to declare in the environment of `.fn`. If a
-#'   name is supplied, the object is assigned to that name. Otherwise
-#'   the argument is automatically named after itself.
+#' @param ... Named arguments to declare in the environment of `.fn`.
 #' @param .parent_env The default of `baseenv()` ensures that the evaluation
 #'   environment of the crate is isolated from the search path. Specifying
 #'   another environment such as the global environment allows this condition to
