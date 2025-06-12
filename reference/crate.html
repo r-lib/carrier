@@ -68,7 +68,7 @@ below.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">crate</span><span class="op">(</span><span class="va">.fn</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">crate</span><span class="op">(</span><span class="va">.fn</span>, <span class="va">...</span>, .parent_env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">baseenv</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -87,6 +87,14 @@ are converted to purrr-like lambda functions using
 <dd><p>Arguments to declare in the environment of <code>.fn</code>. If a
 name is supplied, the object is assigned to that name. Otherwise
 the argument is automatically named after itself.</p></dd>
+
+
+<dt id="arg--parent-env">.parent_env<a class="anchor" aria-label="anchor" href="#arg--parent-env"></a></dt>
+<dd><p>The default of <code><a href="https://rdrr.io/r/base/environment.html" class="external-link">baseenv()</a></code> ensures that the evaluation
+environment of the crate is isolated from the search path. Specifying
+another environment such as the global environment allows this condition to
+be relaxed (but at the expense of no longer being able to rely on a local
+run giving the same results as one in a different process).</p></dd>
 
 </dl></div>
     <div id="creating-self-contained-functions">
