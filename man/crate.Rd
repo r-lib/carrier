@@ -13,9 +13,7 @@ you need to crate a function that is already defined. Formulas
 are converted to purrr-like lambda functions using
 \code{\link[rlang:as_function]{rlang::as_function()}}.}
 
-\item{...}{Arguments to declare in the environment of \code{.fn}. If a
-name is supplied, the object is assigned to that name. Otherwise
-the argument is automatically named after itself.}
+\item{...}{Named arguments to declare in the environment of \code{.fn}.}
 
 \item{.parent_env}{The default of \code{baseenv()} ensures that the evaluation
 environment of the crate is isolated from the search path. Specifying
