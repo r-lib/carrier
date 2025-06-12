@@ -81,7 +81,7 @@ crate <- function(.fn, ..., .parent_env = baseenv()) {
   # is in scope and new data is created in a separate child
   env <- child_env(caller_env())
   dots <- exprs(...)
-  if (!all(nzchar(names(dots)))) {
+  if (!all(nzchar(names2(dots)))) {
     abort("All `...` arguments must be named")
   }
   locally(!!!dots, .env = env)
