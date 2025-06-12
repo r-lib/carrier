@@ -37,6 +37,11 @@ NULL
 #' @param ... Arguments to declare in the environment of `.fn`. If a
 #'   name is supplied, the object is assigned to that name. Otherwise
 #'   the argument is automatically named after itself.
+#' @param .parent_env The default of `baseenv()` ensures that the evaluation
+#'   environment of the crate is isolated from the search path. Specifying
+#'   another environment such as the global environment allows this condition to
+#'   be relaxed (but at the expense of no longer being able to rely on a local
+#'   run giving the same results as one in a different process).
 #'
 #' @export
 #' @examples
@@ -73,7 +78,7 @@ NULL
 #' # explicitly set its environment to the crate environment with the
 #' # set_env() function from rlang:
 #' crate(rlang::set_env(fn))
-crate <- function(.fn, ...) {
+crate <- function(.fn, ..., .parent_env = baseenv()) {
   # Evaluate arguments in a child of the caller so the caller context
   # is in scope and new data is created in a separate child
   env <- child_env(caller_env())
@@ -84,8 +89,9 @@ crate <- function(.fn, ...) {
   # envs when user passed an unevaluated function or formula
   fn <- eval_bare(enexpr(.fn), env)
 
-  # Isolate the evaluation environment from the search path
-  env_poke_parent(env, base_env())
+  # Isolate the evaluation environment from the search path if
+  # .parent_env = baseenv()
+  env_poke_parent(env, .parent_env)
 
   if (is_formula(fn)) {
     fn <- as_function(fn)

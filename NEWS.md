@@ -1,5 +1,12 @@
 # carrier (development version)
 
+* `crate()` gains a `.parent_env` argument. The default is `baseenv()` in order
+  to isolate the crate from the global search path. You can now set it to
+  another environment. For instance, set it to `globalenv()` to make your crate
+  inherit from the search path. Note that, as the global environment is
+  serialized by name rather than by value, the crate is still isolated from
+  objects in the global environment (#16).
+
 # carrier 0.1.1
 
 * Crated functions no longer carry source references (#6).
