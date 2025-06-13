@@ -4,7 +4,13 @@
 \alias{crate}
 \title{Crate a function to share with another process}
 \usage{
-crate(.fn, ..., .parent_env = baseenv(), .error_arg = ".fn", .error_call)
+crate(
+  .fn,
+  ...,
+  .parent_env = baseenv(),
+  .error_arg = ".fn",
+  .error_call = environment()
+)
 }
 \arguments{
 \item{.fn}{A fresh formula or function. "Fresh" here means that
