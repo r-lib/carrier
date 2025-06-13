@@ -82,7 +82,7 @@ crate <- function(
   ...,
   .parent_env = baseenv(),
   .error_arg = ".fn",
-  .error_call
+  .error_call = environment()
 ) {
   # Evaluate arguments in a child of the caller so the caller context
   # is in scope and new data is created in a separate child
