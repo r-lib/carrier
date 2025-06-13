@@ -40,6 +40,7 @@ NULL
 #'   another environment such as the global environment allows this condition to
 #'   be relaxed (but at the expense of no longer being able to rely on a local
 #'   run giving the same results as one in a different process).
+#' @inheritParams rlang::args_error_context
 #'
 #' @export
 #' @examples
@@ -76,7 +77,13 @@ NULL
 #' # explicitly set its environment to the crate environment with the
 #' # set_env() function from rlang:
 #' crate(rlang::set_env(fn))
-crate <- function(.fn, ..., .parent_env = baseenv()) {
+crate <- function(
+  .fn,
+  ...,
+  .parent_env = baseenv(),
+  .error_arg = ".fn",
+  .error_call = environment()
+) {
   # Evaluate arguments in a child of the caller so the caller context
   # is in scope and new data is created in a separate child
   env <- child_env(caller_env())
@@ -97,11 +104,17 @@ crate <- function(.fn, ..., .parent_env = baseenv()) {
   if (is_formula(fn)) {
     fn <- as_function(fn)
   } else if (!is_function(fn)) {
-    abort("`.fn` must evaluate to a function")
+    abort(
+      sprintf("`%s` must evaluate to a function", .error_arg),
+      call = .error_call
+    )
   }
 
   if (!is_reference(get_env(fn), env)) {
-    abort("The function must be defined inside the `crate()` call")
+    abort(
+      "The function must be defined inside this call",
+      call = .error_call
+    )
   }
 
   # Remove potentially heavy srcrefs (#6)
