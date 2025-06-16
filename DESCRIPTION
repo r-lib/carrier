@@ -3,7 +3,7 @@ Title: Isolate Functions for Remote Execution
 Version: 0.1.1.9000
 Authors@R: c(
     person("Lionel", "Henry", , "lionel@posit.co", role = c("aut", "cre")),
-    person("Posit Software, PBC", role = c("cph", "fnd"))
+    person("Posit Software, PBC", role = c("cph", "fnd"), comment = c(ROR = "03wc8by49"))
   )
 Description: Sending functions to remote processes can be wasteful of
     resources because they carry their environments with them. With the
