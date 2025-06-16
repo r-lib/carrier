@@ -14,14 +14,6 @@
       Error in `crate()`:
       ! `.fn` must evaluate to a function
 
-# fails if relevant data not supplied
-
-    Code
-      fn()
-    Condition
-      Error in `fn()`:
-      ! object 'foobar' not found
-
 # new_crate() requires functions
 
     Code

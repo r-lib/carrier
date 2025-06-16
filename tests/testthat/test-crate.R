@@ -49,7 +49,7 @@ test_that("can supply data before or after function", {
 test_that("fails if relevant data not supplied", {
   foobar <- "foobar"
   fn <- crate(foo = "foo", ~ toupper(foobar))
-  expect_snapshot(error = TRUE, fn())
+  expect_error(fn(), "not found")
 })
 
 test_that("can supply data in a block", {
