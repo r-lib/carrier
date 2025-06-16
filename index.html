@@ -79,9 +79,10 @@
 <p><code><a href="reference/crate.html">crate()</a></code> is a function constructor that forces you to be explicit about which data should be packaged with the function. You can create functions using the standard R syntax:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;crate&gt; 7 kB</span></span>
-<span><span class="co">#&gt; * function: 6.55 kB</span></span>
-<span><span class="co">#&gt; function(x) mean(x, na.rm = TRUE)</span></span></code></pre></div>
+<span><span class="co">#&gt; &lt;crate&gt; 1.12 kB</span></span>
+<span><span class="co">#&gt; * function: 560 B</span></span>
+<span><span class="co">#&gt; function (x) </span></span>
+<span><span class="co">#&gt; mean(x, na.rm = TRUE)</span></span></code></pre></div>
 <p>Or with a purrr-like lambda syntax:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">.x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
@@ -129,10 +130,11 @@
 <p>Note how the size of each imported object is displayed when you print the crated function:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fn</span></span>
-<span><span class="co">#&gt; &lt;crate&gt; 9.31 kB</span></span>
-<span><span class="co">#&gt; * function: 8.75 kB</span></span>
+<span><span class="co">#&gt; &lt;crate&gt; 1.51 kB</span></span>
+<span><span class="co">#&gt; * function: 840 B</span></span>
 <span><span class="co">#&gt; * `na_rm`: 56 B</span></span>
-<span><span class="co">#&gt; function(x) stats::var(x, na.rm = na_rm)</span></span></code></pre></div>
+<span><span class="co">#&gt; function (x) </span></span>
+<span><span class="co">#&gt; stats::var(x, na.rm = na_rm)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="unquoting-data-in-the-function">Unquoting data in the function<a class="anchor" aria-label="anchor" href="#unquoting-data-in-the-function"></a>
@@ -140,9 +142,10 @@
 <p>Another way of packaging data is to unquote objects with <code>!!</code>. This works because unquoting inlines objects in function calls. Unquoting can be less verbose if you have many small objects to import inside the function.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="op">!</span><span class="op">!</span><span class="va">na_rm</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;crate&gt; 7.86 kB</span></span>
-<span><span class="co">#&gt; * function: 7.42 kB</span></span>
-<span><span class="co">#&gt; function(x) stats::var(x, na.rm = !!na_rm)</span></span></code></pre></div>
+<span><span class="co">#&gt; &lt;crate&gt; 1.40 kB</span></span>
+<span><span class="co">#&gt; * function: 840 B</span></span>
+<span><span class="co">#&gt; function (x) </span></span>
+<span><span class="co">#&gt; stats::var(x, na.rm = TRUE)</span></span></code></pre></div>
 <p>However, be careful not to unquote large objects because:</p>
 <ul>
 <li>The sizes of unquoted objects are not detailed when you print the crate.</li>
@@ -233,7 +236,7 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Lionel Henry <br><small class="roles"> Author, maintainer </small>   </li>
-<li>Posit Software, PBC <br><small class="roles"> Copyright holder, funder </small>   </li>
+<li>Posit Software, PBC <br><small class="roles"> Copyright holder, funder </small>  <a href="https://ror.org/03wc8by49" class="external-link"><img src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb.svg" class="ror" alt="ROR"></a> </li>
 </ul>
 </div>
 
