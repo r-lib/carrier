@@ -1,4 +1,4 @@
-# carrier (development version)
+# carrier 0.2.0
 
 * `crate()` gains a `.parent_env` argument. The default is `baseenv()` in order
   to isolate the crate from the global search path. You can now set it to
