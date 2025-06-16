@@ -7,16 +7,16 @@ test_that("crate() supports lambda syntax", {
 })
 
 test_that("crate() requires named `...` arguments", {
-  expect_error(
+  expect_snapshot(
+    error = TRUE,
     crate(function(x) identity(x), x = 1, y = 2, 3),
-    "arguments must be named"
   )
   expect_no_error(crate(function(x) identity(x), x = 1, y = 2))
   expect_no_error(crate(function(x) identity(x)))
 })
 
 test_that("crate() requires functions", {
-  expect_error(crate(1), "must evaluate to a function")
+  expect_snapshot(error = TRUE, crate(1))
 })
 
 test_that("crate() supports quasiquotation", {
@@ -70,8 +70,8 @@ test_that("crated function roundtrips under serialisation", {
 })
 
 test_that("new_crate() requires functions", {
-  expect_error(new_crate(1), "must be a function")
-  expect_error(new_crate(~foo), "must be a function")
+  expect_snapshot(error = TRUE, new_crate(1))
+  expect_snapshot(error = TRUE, new_crate(~foo))
 })
 
 test_that("new_crate() crates", {
@@ -119,7 +119,7 @@ function"
 
 test_that("function must be defined in the crate environment", {
   fn <- function() NULL
-  expect_error(crate(fn), "must be defined inside")
+  expect_snapshot(error = TRUE, crate(fn))
 
   expect_s3_class(crate(set_env(fn)), "crate")
 })
