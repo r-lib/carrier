@@ -27,9 +27,10 @@ functions using the standard R syntax:
 
 ``` r
 crate(function(x) mean(x, na.rm = TRUE))
-#> <crate> 7 kB
-#> * function: 6.55 kB
-#> function(x) mean(x, na.rm = TRUE)
+#> <crate> 1.12 kB
+#> * function: 560 B
+#> function (x) 
+#> mean(x, na.rm = TRUE)
 ```
 
 Or with a purrr-like lambda syntax:
@@ -103,10 +104,11 @@ the crated function:
 
 ``` r
 fn
-#> <crate> 9.31 kB
-#> * function: 8.75 kB
+#> <crate> 1.51 kB
+#> * function: 840 B
 #> * `na_rm`: 56 B
-#> function(x) stats::var(x, na.rm = na_rm)
+#> function (x) 
+#> stats::var(x, na.rm = na_rm)
 ```
 
 #### Unquoting data in the function
@@ -118,16 +120,17 @@ function.
 
 ``` r
 crate(function(x) stats::var(x, na.rm = !!na_rm))
-#> <crate> 7.86 kB
-#> * function: 7.42 kB
-#> function(x) stats::var(x, na.rm = !!na_rm)
+#> <crate> 1.40 kB
+#> * function: 840 B
+#> function (x) 
+#> stats::var(x, na.rm = TRUE)
 ```
 
 However, be careful not to unquote large objects because:
 
--   The sizes of unquoted objects are not detailed when you print the
-    crate.
--   Inlined data can cause noisy output.
+- The sizes of unquoted objects are not detailed when you print the
+  crate.
+- Inlined data can cause noisy output.
 
 Let’s unquote a data frame to see the noise caused by inlining:
 
