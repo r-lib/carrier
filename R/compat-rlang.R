@@ -1,4 +1,3 @@
-
 # Remove after rlang 0.3.0 is released
 locally <- function(..., .env = env(caller_env())) {
   dots <- exprs(...)
