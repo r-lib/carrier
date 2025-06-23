@@ -44,11 +44,11 @@
   <div class="col-md-9 contents">
     <div class="page-header">
       <h1 data-toc-skip>Changelog <small></small></h1>
-      <small>Source: <a href="https://github.com/r-lib/carrier/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/r-lib/carrier/blob/v0.2.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.2.0" id="carrier-020">carrier 0.2.0<a class="anchor" aria-label="anchor" href="#carrier-020"></a></h2>
+<h2 class="page-header" data-toc-text="0.2.0" id="carrier-020">carrier 0.2.0<small>2025-06-23</small><a class="anchor" aria-label="anchor" href="#carrier-020"></a></h2>
 <ul><li><p><code><a href="../reference/crate.html">crate()</a></code> gains a <code>.parent_env</code> argument. The default is <code><a href="https://rdrr.io/r/base/environment.html" class="external-link">baseenv()</a></code> in order to isolate the crate from the global search path. You can now set it to another environment. For instance, set it to <code><a href="https://rdrr.io/r/base/environment.html" class="external-link">globalenv()</a></code> to make your crate inherit from the search path. Note that, as the global environment is serialized by name rather than by value, the crate is still isolated from objects in the global environment (<a href="https://github.com/r-lib/carrier/issues/16" class="external-link">#16</a>).</p></li>
 <li><p><code><a href="../reference/crate.html">crate()</a></code> now requires all <code>...</code> arguments to be named instead of silently dropping unnamed arguments (<a href="https://github.com/r-lib/carrier/issues/15" class="external-link">#15</a>).</p></li>
 <li><p><code><a href="../reference/crate.html">crate()</a></code> gains <code>.error_arg</code> and <code>.error_call</code> arguments to allow for better error messages when calling <code><a href="../reference/crate.html">crate()</a></code> from other functions (<a href="https://github.com/r-lib/carrier/issues/14" class="external-link">#14</a>).</p></li>
