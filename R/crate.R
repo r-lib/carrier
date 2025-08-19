@@ -101,6 +101,13 @@ crate <- function(
   # .parent_env = baseenv()
   env_poke_parent(env, .parent_env)
 
+  # Check and set all function closures to the local env
+  for (name in names(env)) {
+    if (is_closure(env[[name]])) {
+      environment(env[[name]]) <- env
+    }
+  }
+
   if (is_formula(fn)) {
     fn <- as_function(fn)
   } else if (!is_function(fn)) {
