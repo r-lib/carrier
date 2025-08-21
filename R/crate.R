@@ -101,9 +101,10 @@ crate <- function(
   # .parent_env = baseenv()
   env_poke_parent(env, .parent_env)
 
-  # Check and set all function closures to the local env
+  # Check and set all non-namespace function closures to the local env
   for (name in names(env)) {
-    if (is_closure(env[[name]])) {
+    x <- env[[name]]
+    if (is_closure(x) && !is_namespace(topenv(environment(x)))) {
       environment(env[[name]]) <- env
     }
   }
