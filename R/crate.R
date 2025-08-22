@@ -104,7 +104,7 @@ crate <- function(
   # Check and set all non-namespace function closures to the local env
   for (name in names(env)) {
     x <- env[[name]]
-    if (is_closure(x) && !is_namespace(topenv(environment(x)))) {
+    if (is_closure(x) && !isNamespace(topenv(environment(x)))) {
       environment(env[[name]]) <- env
     }
   }
@@ -203,3 +203,7 @@ print.crate <- function(x, ...) {
 format_bytes <- function(x) {
   format(as_bytes(unclass(x)))
 }
+
+test_fn <- local(
+  function(x) is_crate(x)
+)

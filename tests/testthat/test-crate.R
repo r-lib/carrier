@@ -123,3 +123,35 @@ test_that("function must be defined in the crate environment", {
 
   expect_s3_class(crate(set_env(fn)), "crate")
 })
+
+test_that("closures are set to the local env for functions in `...`", {
+  really_do_it <- function() "foo"
+  do_it <- function(x) really_do_it()
+  environment(really_do_it) <- environment(do_it) <- globalenv()
+  fn <- crate(function(x) do_it(x), do_it = do_it, really_do_it = really_do_it)
+  expect_equal(fn(), "foo")
+
+  fn2 <- function() {
+    foo <- "bar"
+    do_it <- function(x) foo
+    do <- crate(function(x) do_it(x), do_it = do_it)
+    do()
+  }
+  environment(fn2) <- globalenv()
+  expect_snapshot(error = TRUE, fn2())
+})
+
+test_that("closures are not set for package functions in `...`", {
+  fn <- function() {
+    do_it <- stats::rnorm
+    do <- crate(function(x) do_it(x), do_it = do_it)
+    do(1)
+  }
+  expect_type(fn(), "double")
+  fn2 <- function() {
+    do_it <- carrier:::test_fn
+    do <- crate(function(x) do_it(x), do_it = do_it)
+    do("not a crate")
+  }
+  expect_false(fn2())
+})
