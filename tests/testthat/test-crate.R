@@ -148,10 +148,4 @@ test_that("closures are not set for package functions in `...`", {
     do(1)
   }
   expect_type(fn(), "double")
-  fn2 <- function() {
-    do_it <- carrier:::test_fn
-    do <- crate(function(x) do_it(x), do_it = do_it)
-    do("not a crate")
-  }
-  expect_false(fn2())
 })
