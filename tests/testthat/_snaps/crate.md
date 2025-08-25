@@ -38,11 +38,11 @@
       Error in `crate()`:
       ! The function must be defined inside this call
 
-# closures are set to the local env for functions in `...`
+# objects in function closures passed via `...` are not captured
 
     Code
       fn2()
     Condition
-      Error in `do_it()`:
+      Error in `foo_fn()`:
       ! object 'foo' not found
 
