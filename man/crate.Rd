@@ -59,16 +59,11 @@ stats package must be called with its namespace prefix:
 \code{stats::var(x)}.
 \item They should declare any data they depend on. You can declare data
 by supplying additional arguments or by unquoting objects with \verb{!!}.
-\item If a function is supplied as an additional argument, its closure is
-switched to the crate environment. This allows it to find other
-variables it may depend upon that are also supplied.
-\itemize{
-\item This prevents inadvertently crating unnecessary objects within the
-function closure, but it means that those required by the function will
-need to be explicitly supplied.
-\item This behaviour is only applied to functions, and not recursively to lists
-containing functions for example.
-}
+\item A function (closure) supplied as an additional argument is itself crated.
+This means that it must be self-contained by supplying all objects required
+by it as further additional arguments, if not already supplied. Only
+functions directly supplied to \code{...} are crated, and containers such as
+lists are not recursively walked to find functions.
 }
 }
 
