@@ -123,3 +123,38 @@ test_that("function must be defined in the crate environment", {
 
   expect_s3_class(crate(set_env(fn)), "crate")
 })
+
+test_that("helper functions can be passed via `...`", {
+  really_do_it <- function() "foo"
+  do_it <- function(x) really_do_it()
+  environment(really_do_it) <- environment(do_it) <- globalenv()
+  fn <- crate(function(x) do_it(x), do_it = do_it, really_do_it = really_do_it)
+  expect_equal(fn(), "foo")
+})
+
+test_that("closures passed via `...` are switched to the local env", {
+  fn <- function() {
+    foo <- "bar"
+    foo_fn <- function(x) foo
+    do_fn <- crate(function(x) foo_fn(x), foo_fn = foo_fn)
+    do_fn()
+  }
+  expect_snapshot(error = TRUE, fn())
+})
+
+test_that("`...` objects are not checked recursively for closures", {
+  # Same as above test but wraps the function in a list. We intentionally do
+  # not attempt to check for functions recursively in containers such as lists.
+  fn <- function() {
+    foo <- "bar"
+    foo_list <- list(fn = function(x) foo)
+    do_fn <- crate(function(x) foo_list$fn(x), foo_list = foo_list)
+    do_fn()
+  }
+  expect_equal(fn(), "bar")
+})
+
+test_that("closures passed via `...` are not switched for package functions", {
+  fn <- crate(function(x) format_bytes(x), format_bytes = format_bytes)
+  expect_identical(fn(123), format_bytes(123))
+})
