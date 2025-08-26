@@ -125,6 +125,11 @@ stats package must be called with its namespace prefix:
 <code>stats::var(x)</code>.</p></li>
 <li><p>They should declare any data they depend on. You can declare data
 by supplying additional arguments or by unquoting objects with <code>!!</code>.</p></li>
+<li><p>A function (closure) supplied as an additional argument is itself crated.
+This means that it must be self-contained by supplying all objects required
+by it as further additional arguments, if not already supplied. Only
+functions directly supplied to <code>...</code> are crated, and containers such as
+lists are not recursively walked to find functions.</p></li>
 </ul></div>
 
     <div id="ref-examples">
