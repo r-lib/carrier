@@ -29,6 +29,15 @@ NULL
 #' * They should declare any data they depend on. You can declare data
 #'   by supplying additional arguments or by unquoting objects with `!!`.
 #'
+#' * If a function is supplied as an additional argument, its closure is
+#'   switched to the crate environment. This allows it to find other
+#'   variables it may depend upon that are also supplied.
+#'   + This prevents inadvertently crating unnecessary objects within the
+#'     function closure, but it means that those required by the function will
+#'     need to be explicitly supplied.
+#'   + This behaviour is only applied to functions, and not recursively to lists
+#'     containing functions for example.
+#'
 #' @param .fn A fresh formula or function. "Fresh" here means that
 #'   they should be declared in the call to `crate()`. See examples if
 #'   you need to crate a function that is already defined. Formulas
