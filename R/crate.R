@@ -114,7 +114,8 @@ crate <- function(
   for (name in names(env)) {
     x <- env[[name]]
     if (is_closure(x) && !isNamespace(environment(x))) {
-      environment(env[[name]]) <- env
+      environment(x) <- env
+      env[[name]] <- zap_srcref(x)
     }
   }
 
