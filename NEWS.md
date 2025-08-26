@@ -1,5 +1,11 @@
 # carrier (development version)
 
+* All functions passed to `crate()` via `...` are now themselves crated. This
+  means that they must themselves be self-contained, with any objects they
+  depend upon also passed to `...`. This allows, for example, helper functions
+  to be more easily crated, and prevents inadvertently crating objects contained
+  within a function closure (#27).
+
 # carrier 0.2.0
 
 * `crate()` gains a `.parent_env` argument. The default is `baseenv()` in order
