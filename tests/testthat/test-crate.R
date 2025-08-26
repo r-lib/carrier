@@ -132,17 +132,29 @@ test_that("helper functions can be passed via `...`", {
   expect_equal(fn(), "foo")
 })
 
-test_that("objects in function closures passed via `...` are not captured", {
-  fn2 <- function() {
+test_that("closures passed via `...` are switched to the local env", {
+  fn <- function() {
     foo <- "bar"
-    foo_fn <- function(x) nzchar(foo)
+    foo_fn <- function(x) foo
     do_fn <- crate(function(x) foo_fn(x), foo_fn = foo_fn)
     do_fn()
   }
-  expect_snapshot(error = TRUE, fn2())
+  expect_snapshot(error = TRUE, fn())
 })
 
-test_that("closures are not set for package functions in `...`", {
+test_that("`...` objects are not checked recursively for closures", {
+  # Same as above test but wraps the function in a list. We intentionally do
+  # not attempt to check for functions recursively in containers such as lists.
+  fn <- function() {
+    foo <- "bar"
+    foo_list <- list(fn = function(x) foo)
+    do_fn <- crate(function(x) foo_list$fn(x), foo_list = foo_list)
+    do_fn()
+  }
+  expect_equal(fn(), "bar")
+})
+
+test_that("closures passed via `...` are not switched for package functions", {
   fn <- crate(function(x) format_bytes(x), format_bytes = format_bytes)
   expect_identical(fn(123), format_bytes(123))
 })
