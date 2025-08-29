@@ -158,3 +158,9 @@ test_that("closures passed via `...` are not switched for package functions", {
   fn <- crate(function(x) format_bytes(x), format_bytes = format_bytes)
   expect_identical(fn(123), format_bytes(123))
 })
+
+test_that("crates passed to `...` are not re-crated", {
+  fn2 <- crate(function(x) format_bytes(x), format_bytes = format_bytes)
+  fn <- crate(function(x) fn2(x), fn2 = fn2)
+  expect_identical(fn(123), format_bytes(123))
+})
