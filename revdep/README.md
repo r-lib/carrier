@@ -10,9 +10,9 @@
 |collate  |en_US.UTF-8                                 |
 |ctype    |en_US.UTF-8                                 |
 |tz       |Europe/London                               |
-|date     |2025-08-28                                  |
+|date     |2025-08-29                                  |
 |rstudio  |2025.05.0+496 Mariposa Orchid (desktop)     |
-|pandoc   |3.7.0.2 @ /usr/local/bin/ (via rmarkdown)   |
+|pandoc   |3.7.0.2 @ /usr/local/bin/pandoc             |
 |quarto   |1.7.33 @ /usr/local/bin/quarto              |
 
 # Dependencies
@@ -22,10 +22,4 @@
 |carrier |0.2.0 |0.2.0.9000 |*  |
 
 # Revdeps
-
-## New problems (1)
-
-|package  |version |error  |warning |note |
-|:--------|:-------|:------|:-------|:----|
-|[dynparam](problems.md#dynparam)|1.0.2   |__+2__ |        |     |
 
