@@ -63,7 +63,8 @@ by supplying additional arguments or by unquoting objects with \verb{!!}.
 This means that it must be self-contained by supplying all objects required
 by it as further additional arguments, if not already supplied. Only
 functions directly supplied to \code{...} are crated, and containers such as
-lists are not recursively walked to find functions.
+lists are not recursively walked to find functions. Note that if an
+existing crate is supplied, this is not re-crated.
 }
 }
 
