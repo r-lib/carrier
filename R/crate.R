@@ -33,7 +33,8 @@ NULL
 #'   This means that it must be self-contained by supplying all objects required
 #'   by it as further additional arguments, if not already supplied. Only
 #'   functions directly supplied to `...` are crated, and containers such as
-#'   lists are not recursively walked to find functions.
+#'   lists are not recursively walked to find functions. Note that if an
+#'   existing crate is supplied, this is not re-crated.
 #'
 #' @param .fn A fresh formula or function. "Fresh" here means that
 #'   they should be declared in the call to `crate()`. See examples if
@@ -107,10 +108,10 @@ crate <- function(
   # .parent_env = baseenv()
   env_poke_parent(env, .parent_env)
 
-  # Check and set all non-namespace function closures to the local env
+  # Set all non-namespace, non-crate function closures to the local env
   for (name in names(env)) {
     x <- env[[name]]
-    if (is_closure(x) && !isNamespace(environment(x))) {
+    if (is_closure(x) && !isNamespace(environment(x)) && !is_crate(x)) {
       environment(x) <- env
       env[[name]] <- zap_srcref(x)
     }

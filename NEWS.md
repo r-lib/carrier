@@ -4,7 +4,8 @@
   means that they must themselves be self-contained, with any objects they
   depend upon also passed to `...`. This allows, for example, helper functions
   to be more easily crated, and prevents inadvertently crating objects contained
-  within a function closure (#27).
+  within a function closure. Note that if an existing crate is supplied, this is
+  not re-crated (#27).
 
 # carrier 0.2.0
 
