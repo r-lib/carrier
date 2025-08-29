@@ -1,4 +1,4 @@
-# carrier (development version)
+# carrier 0.3.0
 
 * All functions passed to `crate()` via `...` are now themselves crated. This
   means that they must be self-contained, with any objects they depend upon also
