@@ -49,7 +49,7 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="carrier-development-version">carrier (development version)<a class="anchor" aria-label="anchor" href="#carrier-development-version"></a></h2>
-<ul><li>All functions passed to <code><a href="../reference/crate.html">crate()</a></code> via <code>...</code> are now themselves crated. This means that they must themselves be self-contained, with any objects they depend upon also passed to <code>...</code>. This allows, for example, helper functions to be more easily crated, and prevents inadvertently crating objects contained within a function closure (<a href="https://github.com/r-lib/carrier/issues/27" class="external-link">#27</a>).</li>
+<ul><li>All functions passed to <code><a href="../reference/crate.html">crate()</a></code> via <code>...</code> are now themselves crated. This means that they must themselves be self-contained, with any objects they depend upon also passed to <code>...</code>. This allows, for example, helper functions to be more easily crated, and prevents inadvertently crating objects contained within a function closure. Note that if an existing crate is supplied, this is not re-crated (<a href="https://github.com/r-lib/carrier/issues/27" class="external-link">#27</a>).</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.0" id="carrier-020">carrier 0.2.0<small>2025-06-23</small><a class="anchor" aria-label="anchor" href="#carrier-020"></a></h2>
