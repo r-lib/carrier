@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">carrier</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.4</span>
       </span>
     </div>
 
@@ -48,9 +48,54 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="development version" id="carrier-development-version">carrier (development version)<a class="anchor" aria-label="anchor" href="#carrier-development-version"></a></h2>
-<ul><li>All functions passed to <code><a href="../reference/crate.html">crate()</a></code> via <code>...</code> are now themselves crated. This means that they must themselves be self-contained, with any objects they depend upon also passed to <code>...</code>. This allows, for example, helper functions to be more easily crated, and prevents inadvertently crating objects contained within a function closure. Note that if an existing crate is supplied, this is not re-crated (<a href="https://github.com/r-lib/carrier/issues/27" class="external-link">#27</a>).</li>
-</ul></div>
+<h2 class="page-header" data-toc-text="0.3.0" id="carrier-030">carrier 0.3.0<a class="anchor" aria-label="anchor" href="#carrier-030"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-0-3-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-3-0"></a></h3>
+<p>This release modifies the behaviour of functions crated via <code>...</code>, i.e. in cases like:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">foo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/crate.html">crate</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">foo</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, foo <span class="op">=</span> <span class="va">foo</span><span class="op">)</span></span></code></pre></div>
+<p>Functions passed through <code>...</code>, such as <code>foo</code> in this example, are now automatically <em>crated</em> in the same environment as the main crate. This behaviour change may break your code in some cases but has two important benefits that we thought were worth it:</p>
+<ol style="list-style-type: decimal"><li>
+<p>In the global environment, it allows helper functions to depend on other helper functions defined globally. Take for instance:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">foo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">bar</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="va">bar</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/crate.html">crate</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">foo</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, foo <span class="op">=</span> <span class="va">foo</span>, bar <span class="op">=</span> <span class="va">bar</span><span class="op">)</span></span></code></pre></div>
+<p>Before this change, both <code>foo</code> and <code>bar</code> would inherit from the global environment, before and after being sent to a remote context. While the local context has both <code>foo</code> and <code>bar</code> defined in the global environment, this would not be the case remotely, and <code>foo</code> would not be able to resolve <code>bar</code>.</p>
+<p>Now that we recrate all <code>...</code> closures withing the main crate environment, they are able to see each other.</p>
+</li>
+<li>
+<p>In a local environment (e.g. in a function or within <code><a href="https://rdrr.io/r/base/eval.html" class="external-link">local()</a></code>), the chain of closure environments used to be included in the crate up to the global environment. This meant the problem descibed in (1) didn’t apply in local environments, but the flip side is that it was also easy to inadvertently capture large objects defined in these environments:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">local</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>   <span class="va">large_object</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1e8</span><span class="op">)</span></span>
+<span>   <span class="va">parameter</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span>   <span class="va">foo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">+</span> <span class="va">parameter</span></span>
+<span></span>
+<span>   <span class="fu"><a href="../reference/crate.html">crate</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">foo</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, foo <span class="op">=</span> <span class="va">foo</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<p>In this example, <code>large_object</code> would be included in the crate alongside <code>foo</code>, causing performance issues when sending the crate to a remote context. This is no longer possible now that <code>foo</code> is automatically crated. Any relevant object must be explicitly crated, in one of these ways:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">local</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>   <span class="va">parameter</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span>   <span class="va">foo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">+</span> <span class="va">parameter</span></span>
+<span></span>
+<span>   <span class="fu"><a href="../reference/crate.html">crate</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">foo</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, foo <span class="op">=</span> <span class="va">foo</span>, parameter <span class="op">=</span> <span class="va">parameter</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Or equivalently</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">local</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>   <span class="va">parameter</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span>   <span class="va">foo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/crate.html">crate</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">+</span> <span class="va">parameter</span>, parameter <span class="op">=</span> <span class="va">parameter</span><span class="op">)</span></span>
+<span></span>
+<span>   <span class="fu"><a href="../reference/crate.html">crate</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">foo</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, foo <span class="op">=</span> <span class="va">foo</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+</li>
+</ol></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.0" id="carrier-020">carrier 0.2.0<small>2025-06-23</small><a class="anchor" aria-label="anchor" href="#carrier-020"></a></h2>
 <ul><li><p><code><a href="../reference/crate.html">crate()</a></code> gains a <code>.parent_env</code> argument. The default is <code><a href="https://rdrr.io/r/base/environment.html" class="external-link">baseenv()</a></code> in order to isolate the crate from the global search path. You can now set it to another environment. For instance, set it to <code><a href="https://rdrr.io/r/base/environment.html" class="external-link">globalenv()</a></code> to make your crate inherit from the search path. Note that, as the global environment is serialized by name rather than by value, the crate is still isolated from objects in the global environment (<a href="https://github.com/r-lib/carrier/issues/16" class="external-link">#16</a>).</p></li>
