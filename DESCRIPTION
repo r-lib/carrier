@@ -19,7 +19,8 @@ Depends:
     R (>= 3.4.0)
 Imports:
     lobstr,
-    rlang (>= 1.0.1)
+    rlang (>= 1.0.1),
+    utils
 Suggests:
     testthat (>= 3.0.0)
 ByteCompile: true
