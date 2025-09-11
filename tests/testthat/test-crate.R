@@ -164,3 +164,17 @@ test_that("crates passed to `...` are not re-crated", {
   fn <- crate(function(x) fn2(x), fn2 = fn2)
   expect_identical(fn(123), format_bytes(123))
 })
+
+test_that("compile", {
+  is_compiled = function(x) {
+    tryCatch({
+      capture.output(compiler::disassemble(x))
+      TRUE
+    }, error = function(e) FALSE)
+  }
+  f <- function(x) x + 1L
+  g1 <- crate(function(x) x + 1L, .compile = TRUE)
+  expect_true(is_compiled(g1))
+  g2 <- crate(function(x) x + 1L, .compile = FALSE)
+  expect_false(is_compiled(g2))
+})

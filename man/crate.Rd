@@ -9,7 +9,8 @@ crate(
   ...,
   .parent_env = baseenv(),
   .error_arg = ".fn",
-  .error_call = environment()
+  .error_call = environment(),
+  .compile = TRUE
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ origin of a problem.}
 running function, e.g. \code{caller_env()}. The function will be
 mentioned in error messages as the source of the error. See the
 \code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
+
+\item{.compile}{Whether to compile the function.}
 }
 \description{
 \code{crate()} creates functions in a self-contained environment
