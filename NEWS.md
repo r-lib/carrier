@@ -1,5 +1,10 @@
 # carrier (development version)
 
+## New features
+
+* `crate()` received argument `.compile`, which is `TRUE`
+  by default.
+
 # carrier 0.3.0
 
 ## Breaking changes

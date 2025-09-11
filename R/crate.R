@@ -47,6 +47,7 @@ NULL
 #'   another environment such as the global environment allows this condition to
 #'   be relaxed (but at the expense of no longer being able to rely on a local
 #'   run giving the same results as one in a different process).
+#' @param .compile Whether to compile the function.
 #' @inheritParams rlang::args_error_context
 #'
 #' @export
@@ -89,7 +90,8 @@ crate <- function(
   ...,
   .parent_env = baseenv(),
   .error_arg = ".fn",
-  .error_call = environment()
+  .error_call = environment(),
+  .compile = TRUE
 ) {
   # Evaluate arguments in a child of the caller so the caller context
   # is in scope and new data is created in a separate child
@@ -136,7 +138,18 @@ crate <- function(
   # Remove potentially heavy srcrefs (#6)
   fn <- zap_srcref(fn)
 
+  if (.compile) {
+    fn = compiler::cmpfun(fn)
+  }
+
   new_crate(fn)
+}
+
+is_compiled = function(x) {
+  tryCatch({
+    capture.output(compiler::disassemble(x))
+    TRUE
+  }, error = function(e) FALSE)
 }
 
 
