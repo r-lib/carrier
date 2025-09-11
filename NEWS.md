@@ -19,7 +19,7 @@ thought were worth it:
    helper functions defined globally. Take for instance:
 
    ```r
-   foo <- function(x) foo(x)
+   foo <- function(x) bar(x)
    bar <- function(x) x + 1
 
    crate(\(x) foo(x), foo = foo, bar = bar)
