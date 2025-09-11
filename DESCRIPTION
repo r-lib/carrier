@@ -1,6 +1,6 @@
 Package: carrier
 Title: Isolate Functions for Remote Execution
-Version: 0.2.0.9000
+Version: 0.3.0.4
 Authors@R: c(
     person("Lionel", "Henry", , "lionel@posit.co", role = c("aut", "cre")),
     person("Posit Software, PBC", role = c("cph", "fnd"),
@@ -21,11 +21,10 @@ Imports:
     lobstr,
     rlang (>= 1.0.1)
 Suggests:
-    covr,
     testthat (>= 3.0.0)
 ByteCompile: true
 Config/testthat/edition: 3
 Config/usethis/last-upkeep: 2025-06-16
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3

@@ -1,11 +1,76 @@
-# carrier (development version)
+# carrier 0.3.0
 
-* All functions passed to `crate()` via `...` are now themselves crated. This
-  means that they must themselves be self-contained, with any objects they
-  depend upon also passed to `...`. This allows, for example, helper functions
-  to be more easily crated, and prevents inadvertently crating objects contained
-  within a function closure. Note that if an existing crate is supplied, this is
-  not re-crated (#27).
+## Breaking changes
+
+This release modifies the behaviour of functions crated via `...`, i.e. in cases like:
+
+```r
+foo <- function(x) x + 1
+
+crate(\(x) foo(x), foo = foo)
+```
+
+Functions passed through `...`, such as `foo` in this example, are now
+automatically _crated_ in the same environment as the main crate. This behaviour
+change may break your code in some cases but has two important benefits that we
+thought were worth it:
+
+1. In the global environment, it allows helper functions to depend on other
+   helper functions defined globally. Take for instance:
+
+   ```r
+   foo <- function(x) bar(x)
+   bar <- function(x) x + 1
+
+   crate(\(x) foo(x), foo = foo, bar = bar)
+   ```
+
+   Before this change, both `foo` and `bar` would inherit from the global
+   environment, before and after being sent to a remote context. While the local
+   context has both `foo` and `bar` defined in the global environment, this
+   would not be the case remotely, and `foo` would not be able to resolve `bar`.
+
+   Now that we recrate all `...` closures withing the main crate environment,
+   they are able to see each other.
+
+2. In a local environment (e.g. in a function or within `local()`), the chain of
+   closure environments used to be included in the crate up to the global
+   environment. This meant the problem descibed in (1) didn't apply in local
+   environments, but the flip side is that it was also easy to inadvertently
+   capture large objects defined in these environments:
+
+   ```r
+   local({
+      large_object <- rnorm(1e8)
+      parameter <- 1
+      foo <- function(x) x + parameter
+
+      crate(\(x) foo(x), foo = foo)
+   })
+   ```
+
+   In this example, `large_object`  would be included in the crate alongside
+   `foo`, causing performance issues when sending the crate to a remote context.
+   This is no longer possible now that `foo` is automatically crated. Any
+   relevant object must be explicitly crated, in one of these ways:
+
+   ```r
+   local({
+      parameter <- 1
+      foo <- function(x) x + parameter
+
+      crate(\(x) foo(x), foo = foo, parameter = parameter)
+   })
+
+   # Or equivalently
+   local({
+      parameter <- 1
+      foo <- crate(\(x) x + parameter, parameter = parameter)
+
+      crate(\(x) foo(x), foo = foo)
+   })
+   ```
+
 
 # carrier 0.2.0
 
