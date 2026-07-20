@@ -117,11 +117,93 @@ function"
   expect_output(print(fn), output, fixed = TRUE)
 })
 
-test_that("function must be defined in the crate environment", {
+test_that("crate() accepts existing functions", {
   fn <- function() NULL
-  expect_snapshot(error = TRUE, crate(fn))
-
+  expect_s3_class(crate(fn), "crate")
   expect_s3_class(crate(set_env(fn)), "crate")
+})
+
+test_that("existing functions are re-environed to the crate env", {
+  outer <- "outer"
+  helper <- function() outer
+  fn <- crate(helper, outer = outer)
+  expect_identical(fn(), "outer")
+  expect_true("outer" %in% env_names(fn_env(fn)))
+})
+
+test_that("data captured in an existing function's env is dropped", {
+  fn <- local({
+    captured <- "lost"
+    function() captured
+  })
+  out <- crate(fn)
+  expect_error(out(), "captured")
+})
+
+test_that("an existing crate passed as `.fn` keeps its env", {
+  inner <- crate(function() data, data = "inner")
+  out <- crate(inner)
+  expect_identical(out(), "inner")
+})
+
+test_that("existing formulas are re-environed to the crate env", {
+  f <- ~ toupper(x)
+  fn <- crate(f, x = "a")
+  expect_identical(fn(), "A")
+  expect_identical(env_parent(fn_env(fn)), baseenv())
+})
+
+test_that("an existing namespace function passed as `.fn` is wrapped", {
+  out <- crate(format_bytes)
+  expect_identical(out(123), format_bytes(123))
+  expect_identical(env_parent(fn_env(out)), baseenv())
+  expect_true("..fn.." %in% env_names(fn_env(out)))
+})
+
+test_that("a primitive passed as `.fn` is wrapped without warning", {
+  expect_no_warning(out <- crate(sum))
+  expect_identical(out(1:10), 55L)
+  expect_identical(env_parent(fn_env(out)), baseenv())
+  expect_true("..fn.." %in% env_names(fn_env(out)))
+})
+
+test_that("wrapped functions pass named arguments through", {
+  fn <- crate(stats::var)
+  x <- c(1:10, NA)
+  expect_identical(fn(x = x, na.rm = TRUE), stats::var(x, na.rm = TRUE))
+})
+
+test_that("wrapped crates roundtrip under serialisation", {
+  fn <- crate(format_bytes)
+  out <- unserialize(serialize(fn, NULL))
+  expect_identical(out(123), fn(123))
+})
+
+test_that("`..fn..` is shown in the printout of wrapped crates", {
+  fn <- crate(stats::var)
+  expect_output(print(fn), "`..fn..`:", fixed = TRUE)
+})
+
+test_that("dot-prefixed data is shown in the printout", {
+  fn <- crate(~.n, .n = 1)
+  expect_output(print(fn), "`.n`:", fixed = TRUE)
+})
+
+test_that("`...` data errors when it is unreachable from `.fn`", {
+  fn2 <- crate(function() NULL)
+  expect_snapshot(error = TRUE, crate(fn2, x = 1))
+  expect_snapshot(error = TRUE, crate(stats::var, na_rm = TRUE))
+  expect_snapshot(error = TRUE, crate(sum, x = 1))
+})
+
+test_that("`..fn..` is reserved in the crate environment", {
+  expect_snapshot(
+    error = TRUE,
+    crate({
+      ..fn.. <- "x"
+      sum
+    })
+  )
 })
 
 test_that("helper functions can be passed via `...`", {

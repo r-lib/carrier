@@ -1,5 +1,26 @@
 # carrier (development version)
 
+* `crate()` no longer requires `.fn` to be defined inside the call.
+  Existing functions can now be passed directly:
+
+  * Plain closures have their enclosing environment replaced with the
+    crate's evaluation environment, equivalent to the previous
+    workaround `crate(rlang::set_env(fn))`.
+
+  * Namespace functions and primitives are wrapped in a thin closure
+    that delegates to them, which preserves their internal lookups
+    and avoids a deprecation warning when setting attributes on
+    primitives.
+
+  * Existing crates are passed through unchanged.
+
+  * As data declared via `...` is only reachable from plain closures,
+    it is an error to supply `...` when `.fn` is an existing crate, a
+    namespace function, or a primitive.
+
+* The printout of a crate now includes data bound to names starting
+  with a dot.
+
 # carrier 0.3.0
 
 ## Breaking changes
