@@ -36,7 +36,7 @@
       crate(fn2, x = 1)
     Condition
       Error in `crate()`:
-      ! Can't declare data via `...` when `.fn` is an existing crate.
+      ! Can't pass data via `...` when `.fn` is an existing crate.
 
 ---
 
