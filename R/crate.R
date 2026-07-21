@@ -158,7 +158,7 @@ crate <- function(
       what <- if (is_crate(fn)) {
         "an existing crate"
       } else {
-        "a namespace function or primitive"
+        "a namespaced function or primitive"
       }
       abort(
         sprintf("Can't declare data via `...` when `%s` is %s.", .error_arg, what),
