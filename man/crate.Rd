@@ -22,7 +22,7 @@ the crate's evaluation environment, so any data they depend on
 must be declared via \code{...}. This means closures that depend on
 captured state, such as those created by function factories
 (e.g. the result of \code{\link[stats:ecdf]{stats::ecdf()}}), lose that state and fail
-when called.
+when called. See Examples for how to crate such functions.
 \item Namespace functions and primitives are wrapped in a thin
 closure that delegates to them, leaving their original
 environment untouched.
@@ -120,4 +120,8 @@ crate(fn)
 fn <- stats::ecdf(1:10)
 crated <- crate(fn)
 try(crated(5))
+
+# Instead, construct the function within the crate:
+crated <- crate(function(x) stats::ecdf(1:10)(x))
+crated(5)
 }
