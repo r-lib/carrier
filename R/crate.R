@@ -140,34 +140,39 @@ crate <- function(
 
   if (is_formula(fn)) {
     fn <- as_function(fn)
+    environment(fn) <- env
   } else if (!is_function(fn)) {
     abort(
       sprintf("`%s` must evaluate to a function", .error_arg),
       call = .error_call
     )
-  }
-
-  # Re-env user closures into the local env, wrap primitives and
-  # namespace functions, and leave existing crates alone
-  if (is_closure(fn) && !isNamespace(environment(fn)) && !is_crate(fn)) {
-    environment(fn) <- env
-  } else {
-    # Only re-enveloped closures can see the crate environment, so
-    # data declared via `...` would be unreachable here
+  } else if (is_crate(fn)) {
+    # Existing crates pass through unchanged and can't take new data
     if (length(dots)) {
-      what <- if (is_crate(fn)) {
-        "an existing crate"
-      } else {
-        "a namespaced function or primitive"
-      }
       abort(
-        sprintf("Can't declare data via `...` when `%s` is %s.", .error_arg, what),
+        sprintf(
+          "Can't declare data via `...` when `%s` is an existing crate.",
+          .error_arg
+        ),
         call = .error_call
       )
     }
-    if (!is_crate(fn)) {
-      fn <- wrap_into_crate_env(fn, env, .error_call)
+  } else if (is_primitive(fn) || isNamespace(environment(fn))) {
+    # Wrap in a thin closure that delegates, leaving the original
+    # environment untouched; declared data would be unreachable
+    if (length(dots)) {
+      abort(
+        sprintf(
+          "Can't declare data via `...` when `%s` is a namespaced function or primitive.",
+          .error_arg
+        ),
+        call = .error_call
+      )
     }
+    fn <- wrap_into_crate_env(fn, env, .error_call)
+  } else {
+    # Plain closures are re-enveloped into the crate environment
+    environment(fn) <- env
   }
 
   # Remove potentially heavy srcrefs (#6)
