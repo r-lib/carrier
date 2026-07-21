@@ -151,7 +151,7 @@ crate <- function(
     if (length(dots)) {
       abort(
         sprintf(
-          "Can't declare data via `...` when `%s` is an existing crate.",
+          "Can't pass data via `...` when `%s` is an existing crate.",
           .error_arg
         ),
         call = .error_call
