@@ -161,10 +161,12 @@ crate <- function(
     # Wrap in a thin closure that delegates, leaving the original
     # environment untouched; declared data would be unreachable
     if (length(dots)) {
+      what <- if (is_primitive(fn)) "primitive" else "namespaced"
       abort(
         sprintf(
-          "Can't declare data via `...` when `%s` is a namespaced function or primitive.",
-          .error_arg
+          "Can't declare data via `...` when `%s` is a %s function.",
+          .error_arg,
+          what
         ),
         call = .error_call
       )
