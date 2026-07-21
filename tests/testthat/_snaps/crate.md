@@ -44,7 +44,7 @@
       crate(stats::var, na_rm = TRUE)
     Condition
       Error in `crate()`:
-      ! Can't declare data via `...` when `.fn` is a namespace function or primitive.
+      ! Can't declare data via `...` when `.fn` is a namespaced function or primitive.
 
 ---
 
@@ -52,7 +52,7 @@
       crate(sum, x = 1)
     Condition
       Error in `crate()`:
-      ! Can't declare data via `...` when `.fn` is a namespace function or primitive.
+      ! Can't declare data via `...` when `.fn` is a namespaced function or primitive.
 
 # `..fn..` is reserved in the crate environment
 
