@@ -97,14 +97,11 @@ na_rm <- TRUE
 fn <- crate(~ stats::var(.x, na.rm = na_rm))
 try(fn(1:10))
 
-# For small data it is handy to unquote instead. Unquoting inlines
-# objects inside the function. This is less verbose if your
-# function depends on many small objects:
-fn <- crate(~ stats::var(.x, na.rm = !!na_rm))
+# Declare `na_rm` by passing it as a named argument:
+fn <- crate(~ stats::var(.x, na.rm = na_rm), na_rm = na_rm)
 fn(1:10)
 
-# One downside is that the individual sizes of unquoted objects
-# won't be shown in the crate printout:
+# The size of each declared object is shown in the crate printout:
 fn
 
 
