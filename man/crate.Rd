@@ -86,7 +86,7 @@ existing crate is supplied, this is not re-crated.
 
 \examples{
 # You can create functions using the ordinary notation:
-crate(function(x) stats::var(x))
+crate(\(x) stats::var(x))
 
 # Or the formula notation:
 crate(~ stats::var(.x))
@@ -119,6 +119,6 @@ crated <- crate(fn)
 try(crated(5))
 
 # Instead, construct the function within the crate:
-crated <- crate(function(x) stats::ecdf(1:10)(x))
+crated <- crate(\(x) stats::ecdf(1:10)(x))
 crated(5)
 }

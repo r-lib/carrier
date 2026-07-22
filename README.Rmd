@@ -31,7 +31,7 @@ See also the [bundle](https://rstudio.github.io/bundle/) package for the tidymod
 `crate()` is a function constructor that forces you to be explicit about which data should be packaged with the function. You can create functions using the standard R syntax:
 
 ```{r}
-crate(function(x) mean(x, na.rm = TRUE))
+crate(\(x) mean(x, na.rm = TRUE))
 ```
 
 Or with a purrr-like lambda syntax:
@@ -67,7 +67,7 @@ If your function depends on global data, you need to declare it to make it avail
 ```{r, error = TRUE}
 na_rm <- TRUE
 
-fn <- crate(function(x) stats::var(x, na.rm = na_rm))
+fn <- crate(\(x) stats::var(x, na.rm = na_rm))
 fn(1:10)
 ```
 
@@ -79,7 +79,7 @@ You can declare objects by passing them as named arguments to `crate()`:
 
 ```{r}
 fn <- crate(
-  function(x) stats::var(x, na.rm = na_rm),
+  \(x) stats::var(x, na.rm = na_rm),
   na_rm = na_rm
 )
 fn(1:10)
@@ -97,7 +97,7 @@ fn
 Another way of packaging data is to unquote objects with `!!`. This works because unquoting inlines objects in function calls. Unquoting can be less verbose if you have many small objects to import inside the function.
 
 ```{r}
-crate(function(x) stats::var(x, na.rm = !!na_rm))
+crate(\(x) stats::var(x, na.rm = !!na_rm))
 ```
 
 However, be careful not to unquote large objects because:

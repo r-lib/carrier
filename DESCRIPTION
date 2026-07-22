@@ -16,7 +16,7 @@ License: MIT + file LICENSE
 URL: https://github.com/r-lib/carrier
 BugReports: https://github.com/r-lib/carrier/issues
 Depends:
-    R (>= 3.4.0)
+    R (>= 4.1)
 Imports:
     lobstr,
     rlang (>= 1.0.1)
