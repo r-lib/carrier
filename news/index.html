@@ -49,7 +49,15 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="carrier-development-version">carrier (development version)<a class="anchor" aria-label="anchor" href="#carrier-development-version"></a></h2>
-</div>
+<ul><li>
+<p><code><a href="../reference/crate.html">crate()</a></code> no longer requires <code>.fn</code> to be defined inside the call. Existing functions can now be passed directly:</p>
+<ul><li><p>Plain closures have their enclosing environment replaced with the crate’s evaluation environment, equivalent to the previous workaround <code>crate(rlang::set_env(fn))</code>.</p></li>
+<li><p>Namespace functions and primitives are wrapped in a thin closure that delegates to them, which preserves their internal lookups and avoids a deprecation warning when setting attributes on primitives.</p></li>
+<li><p>Existing crates are passed through unchanged.</p></li>
+<li><p>As data declared via <code>...</code> is only reachable from plain closures, it is an error to supply <code>...</code> when <code>.fn</code> is an existing crate, a namespace function, or a primitive.</p></li>
+</ul></li>
+<li><p>The printout of a crate now includes data bound to names starting with a dot.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.3.0" id="carrier-030">carrier 0.3.0<a class="anchor" aria-label="anchor" href="#carrier-030"></a></h2>
 <div class="section level3">
@@ -128,7 +136,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>
