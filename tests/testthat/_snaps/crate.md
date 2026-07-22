@@ -30,13 +30,40 @@
       Error in `new_crate()`:
       ! `crate` must be a function
 
-# function must be defined in the crate environment
+# `...` data errors when it is unreachable from `.fn`
 
     Code
-      crate(fn)
+      crate(fn2, x = 1)
     Condition
       Error in `crate()`:
-      ! The function must be defined inside this call
+      ! Can't pass data via `...` when `.fn` is an existing crate.
+
+---
+
+    Code
+      crate(stats::var, na_rm = TRUE)
+    Condition
+      Error in `crate()`:
+      ! Can't declare data via `...` when `.fn` is a namespaced function.
+
+---
+
+    Code
+      crate(sum, x = 1)
+    Condition
+      Error in `crate()`:
+      ! Can't declare data via `...` when `.fn` is a primitive function.
+
+# `..fn..` is reserved in the crate environment
+
+    Code
+      crate({
+        ..fn.. <- "x"
+        sum
+      })
+    Condition
+      Error in `crate()`:
+      ! The name `..fn..` is reserved by `crate()`.
 
 # closures passed via `...` are switched to the local env
 

@@ -16,15 +16,15 @@ License: MIT + file LICENSE
 URL: https://github.com/r-lib/carrier
 BugReports: https://github.com/r-lib/carrier/issues
 Depends:
-    R (>= 3.4.0)
+    R (>= 4.1)
 Imports:
     lobstr,
     rlang (>= 1.0.1)
 Suggests:
     testthat (>= 3.0.0)
 ByteCompile: true
+Config/roxygen2/markdown: TRUE
+Config/roxygen2/version: 8.0.0
 Config/testthat/edition: 3
 Config/usethis/last-upkeep: 2025-06-16
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3

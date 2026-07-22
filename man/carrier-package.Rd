@@ -19,6 +19,11 @@ Useful links:
 \author{
 \strong{Maintainer}: Lionel Henry \email{lionel@posit.co}
 
+Authors:
+\itemize{
+  \item Lionel Henry \email{lionel@posit.co}
+}
+
 Other contributors:
 \itemize{
   \item Posit Software, PBC (\href{https://ror.org/03wc8by49}{ROR}) [copyright holder, funder]

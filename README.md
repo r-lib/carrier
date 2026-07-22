@@ -26,7 +26,7 @@ which data should be packaged with the function. You can create
 functions using the standard R syntax:
 
 ``` r
-crate(function(x) mean(x, na.rm = TRUE))
+crate(\(x) mean(x, na.rm = TRUE))
 #> <crate> 1.12 kB
 #> * function: 560 B
 #> function (x) 
@@ -78,7 +78,7 @@ it available to your crated function. Here we forgot to declare `na_rm`:
 ``` r
 na_rm <- TRUE
 
-fn <- crate(function(x) stats::var(x, na.rm = na_rm))
+fn <- crate(\(x) stats::var(x, na.rm = na_rm))
 fn(1:10)
 #> Error in fn(1:10): object 'na_rm' not found
 ```
@@ -92,7 +92,7 @@ You can declare objects by passing them as named arguments to `crate()`:
 
 ``` r
 fn <- crate(
-  function(x) stats::var(x, na.rm = na_rm),
+  \(x) stats::var(x, na.rm = na_rm),
   na_rm = na_rm
 )
 fn(1:10)
@@ -119,7 +119,7 @@ be less verbose if you have many small objects to import inside the
 function.
 
 ``` r
-crate(function(x) stats::var(x, na.rm = !!na_rm))
+crate(\(x) stats::var(x, na.rm = !!na_rm))
 #> <crate> 1.40 kB
 #> * function: 840 B
 #> function (x) 

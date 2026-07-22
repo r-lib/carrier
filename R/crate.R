@@ -36,12 +36,27 @@ NULL
 #'   lists are not recursively walked to find functions. Note that if an
 #'   existing crate is supplied, this is not re-crated.
 #'
-#' @param .fn A fresh formula or function. "Fresh" here means that
-#'   they should be declared in the call to `crate()`. See examples if
-#'   you need to crate a function that is already defined. Formulas
-#'   are converted to purrr-like lambda functions using
+#' @param .fn A formula or function. The function may be defined
+#'   inside the call to `crate()` or already exist. For an existing
+#'   function:
+#'
+#'   * Plain closures have their enclosing environment replaced with
+#'     the crate's evaluation environment, so any data they depend on
+#'     must be declared via `...`. This means closures that depend on
+#'     captured state, such as those created by function factories
+#'     (e.g. the result of [stats::ecdf()]), lose that state and fail
+#'     when called. See Examples for how to crate such functions.
+#'   * Namespace functions and primitives are wrapped in a thin
+#'     closure that delegates to them, leaving their original
+#'     environment untouched.
+#'   * Existing crates are passed through unchanged.
+#'
+#'   Formulas are converted to purrr-like lambda functions using
 #'   [rlang::as_function()].
 #' @param ... Named arguments to declare in the environment of `.fn`.
+#'   Declared data is only reachable from plain closures; it is an
+#'   error to supply `...` when `.fn` is an existing crate, a
+#'   namespace function, or a primitive.
 #' @param .parent_env The default of `baseenv()` ensures that the evaluation
 #'   environment of the crate is isolated from the search path. Specifying
 #'   another environment such as the global environment allows this condition to
@@ -52,7 +67,7 @@ NULL
 #' @export
 #' @examples
 #' # You can create functions using the ordinary notation:
-#' crate(function(x) stats::var(x))
+#' crate(\(x) stats::var(x))
 #'
 #' # Or the formula notation:
 #' crate(~ stats::var(.x))
@@ -63,27 +78,30 @@ NULL
 #' fn <- crate(~ stats::var(.x, na.rm = na_rm))
 #' try(fn(1:10))
 #'
-#' # For small data it is handy to unquote instead. Unquoting inlines
-#' # objects inside the function. This is less verbose if your
-#' # function depends on many small objects:
-#' fn <- crate(~ stats::var(.x, na.rm = !!na_rm))
+#' # Declare `na_rm` by passing it as a named argument:
+#' fn <- crate(~ stats::var(.x, na.rm = na_rm), na_rm = na_rm)
 #' fn(1:10)
 #'
-#' # One downside is that the individual sizes of unquoted objects
-#' # won't be shown in the crate printout:
+#' # The size of each declared object is shown in the crate printout:
 #' fn
 #'
 #'
-#' # The function or formula you pass to crate() should defined inside
-#' # the crate() call, i.e. you can't pass an already defined
-#' # function:
+#' # You can also pass an already defined function. Its enclosing
+#' # environment is replaced with the crate's evaluation environment,
+#' # so any data it depends on must be declared via `...`:
 #' fn <- function(x) toupper(x)
-#' try(crate(fn))
+#' crate(fn)
 #'
-#' # If you really need to crate an existing function, you can
-#' # explicitly set its environment to the crate environment with the
-#' # set_env() function from rlang:
-#' crate(rlang::set_env(fn))
+#' # For the same reason, existing functions that depend on state
+#' # captured in their environment, such as those created by function
+#' # factories, lose that state and fail when called:
+#' fn <- stats::ecdf(1:10)
+#' crated <- crate(fn)
+#' try(crated(5))
+#'
+#' # Instead, construct the function within the crate:
+#' crated <- crate(\(x) stats::ecdf(1:10)(x))
+#' crated(5)
 crate <- function(
   .fn,
   ...,
@@ -119,24 +137,63 @@ crate <- function(
 
   if (is_formula(fn)) {
     fn <- as_function(fn)
+    environment(fn) <- env
   } else if (!is_function(fn)) {
     abort(
       sprintf("`%s` must evaluate to a function", .error_arg),
       call = .error_call
     )
-  }
-
-  if (!is_reference(get_env(fn), env)) {
-    abort(
-      "The function must be defined inside this call",
-      call = .error_call
-    )
+  } else if (is_crate(fn)) {
+    # Existing crates pass through unchanged and can't take new data
+    if (length(dots)) {
+      abort(
+        sprintf(
+          "Can't pass data via `...` when `%s` is an existing crate.",
+          .error_arg
+        ),
+        call = .error_call
+      )
+    }
+  } else if (is_primitive(fn) || isNamespace(environment(fn))) {
+    # Wrap in a thin closure that delegates, leaving the original
+    # environment untouched; declared data would be unreachable
+    if (length(dots)) {
+      what <- if (is_primitive(fn)) "primitive" else "namespaced"
+      abort(
+        sprintf(
+          "Can't declare data via `...` when `%s` is a %s function.",
+          .error_arg,
+          what
+        ),
+        call = .error_call
+      )
+    }
+    fn <- wrap_into_crate_env(fn, env, .error_call)
+  } else {
+    # Plain closures are re-enveloped into the crate environment
+    environment(fn) <- env
   }
 
   # Remove potentially heavy srcrefs (#6)
   fn <- zap_srcref(fn)
 
   new_crate(fn)
+}
+
+wrap_into_crate_env <- function(fn, env, error_call) {
+  name <- "..fn.."
+  if (env_has(env, name)) {
+    abort(
+      sprintf("The name `%s` is reserved by `crate()`.", name),
+      call = error_call
+    )
+  }
+  env[[name]] <- zap_srcref(fn)
+  new_function(
+    alist(... = ),
+    call(name, quote(...)),
+    env = env
+  )
 }
 
 
@@ -165,7 +222,7 @@ crate_sizes <- function(crate) {
   bare_size <- lobstr::obj_size(bare_fn)
 
   env <- fn_env(crate)
-  nms <- ls(env)
+  nms <- names(env)
 
   n <- length(nms) + 1
   out <- new_list(n, c("function", nms))

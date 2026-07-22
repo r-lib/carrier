@@ -13,13 +13,29 @@ crate(
 )
 }
 \arguments{
-\item{.fn}{A fresh formula or function. "Fresh" here means that
-they should be declared in the call to \code{crate()}. See examples if
-you need to crate a function that is already defined. Formulas
-are converted to purrr-like lambda functions using
+\item{.fn}{A formula or function. The function may be defined
+inside the call to \code{crate()} or already exist. For an existing
+function:
+\itemize{
+\item Plain closures have their enclosing environment replaced with
+the crate's evaluation environment, so any data they depend on
+must be declared via \code{...}. This means closures that depend on
+captured state, such as those created by function factories
+(e.g. the result of \code{\link[stats:ecdf]{stats::ecdf()}}), lose that state and fail
+when called. See Examples for how to crate such functions.
+\item Namespace functions and primitives are wrapped in a thin
+closure that delegates to them, leaving their original
+environment untouched.
+\item Existing crates are passed through unchanged.
+}
+
+Formulas are converted to purrr-like lambda functions using
 \code{\link[rlang:as_function]{rlang::as_function()}}.}
 
-\item{...}{Named arguments to declare in the environment of \code{.fn}.}
+\item{...}{Named arguments to declare in the environment of \code{.fn}.
+Declared data is only reachable from plain closures; it is an
+error to supply \code{...} when \code{.fn} is an existing crate, a
+namespace function, or a primitive.}
 
 \item{.parent_env}{The default of \code{baseenv()} ensures that the evaluation
 environment of the crate is isolated from the search path. Specifying
@@ -70,7 +86,7 @@ existing crate is supplied, this is not re-crated.
 
 \examples{
 # You can create functions using the ordinary notation:
-crate(function(x) stats::var(x))
+crate(\(x) stats::var(x))
 
 # Or the formula notation:
 crate(~ stats::var(.x))
@@ -81,25 +97,28 @@ na_rm <- TRUE
 fn <- crate(~ stats::var(.x, na.rm = na_rm))
 try(fn(1:10))
 
-# For small data it is handy to unquote instead. Unquoting inlines
-# objects inside the function. This is less verbose if your
-# function depends on many small objects:
-fn <- crate(~ stats::var(.x, na.rm = !!na_rm))
+# Declare `na_rm` by passing it as a named argument:
+fn <- crate(~ stats::var(.x, na.rm = na_rm), na_rm = na_rm)
 fn(1:10)
 
-# One downside is that the individual sizes of unquoted objects
-# won't be shown in the crate printout:
+# The size of each declared object is shown in the crate printout:
 fn
 
 
-# The function or formula you pass to crate() should defined inside
-# the crate() call, i.e. you can't pass an already defined
-# function:
+# You can also pass an already defined function. Its enclosing
+# environment is replaced with the crate's evaluation environment,
+# so any data it depends on must be declared via `...`:
 fn <- function(x) toupper(x)
-try(crate(fn))
+crate(fn)
 
-# If you really need to crate an existing function, you can
-# explicitly set its environment to the crate environment with the
-# set_env() function from rlang:
-crate(rlang::set_env(fn))
+# For the same reason, existing functions that depend on state
+# captured in their environment, such as those created by function
+# factories, lose that state and fail when called:
+fn <- stats::ecdf(1:10)
+crated <- crate(fn)
+try(crated(5))
+
+# Instead, construct the function within the crate:
+crated <- crate(\(x) stats::ecdf(1:10)(x))
+crated(5)
 }
