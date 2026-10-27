@@ -59,7 +59,8 @@ specify that `var()` comes from the stats namespace:
 ``` r
 fn <- crate(~var(.x))
 fn(1:10)
-#> Error in var(.x): could not find function "var"
+#> Error in `var()`:
+#> ! could not find function "var"
 ```
 
 So let’s add the namespace prefix:
@@ -80,7 +81,8 @@ na_rm <- TRUE
 
 fn <- crate(\(x) stats::var(x, na.rm = na_rm))
 fn(1:10)
-#> Error in fn(1:10): object 'na_rm' not found
+#> Error in `fn()`:
+#> ! object 'na_rm' not found
 ```
 
 There are two techniques for packaging data into your crate: passing
