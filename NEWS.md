@@ -1,4 +1,4 @@
-# carrier (development version)
+# carrier 0.4.0
 
 * `crate()` no longer requires `.fn` to be defined inside the call.
   Existing functions can now be passed directly:

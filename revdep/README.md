@@ -1,25 +1,25 @@
 # Platform
 
-|field    |value                                       |
-|:--------|:-------------------------------------------|
-|version  |R version 4.5.1 Patched (2025-06-14 r88315) |
-|os       |macOS Sequoia 15.6.1                        |
-|system   |aarch64, darwin20                           |
-|ui       |RStudio                                     |
-|language |(EN)                                        |
-|collate  |en_US.UTF-8                                 |
-|ctype    |en_US.UTF-8                                 |
-|tz       |Europe/London                               |
-|date     |2025-08-29                                  |
-|rstudio  |2025.05.0+496 Mariposa Orchid (desktop)     |
-|pandoc   |3.7.0.2 @ /usr/local/bin/pandoc             |
-|quarto   |1.7.33 @ /usr/local/bin/quarto              |
+|field    |value                                                            |
+|:--------|:----------------------------------------------------------------|
+|version  |R version 4.6.1 (2026-06-24)                                     |
+|os       |macOS Golden Gate 27.2                                           |
+|system   |aarch64, darwin23                                                |
+|ui       |Positron                                                         |
+|language |(EN)                                                             |
+|collate  |en_US.UTF-8                                                      |
+|ctype    |en_US.UTF-8                                                      |
+|tz       |Europe/London                                                    |
+|date     |2026-10-27                                                       |
+|pandoc   |3.12.1 @ /usr/local/bin/ (via rmarkdown)                         |
+|quarto   |99.9.9 @ /Users/shikokuchuo/r/quarto-cli/package/dist/bin/quarto |
 
 # Dependencies
 
-|package |old   |new        |Δ  |
-|:-------|:-----|:----------|:--|
-|carrier |0.2.0 |0.2.0.9000 |*  |
+|package |old     |new        |Δ  |
+|:-------|:-------|:----------|:--|
+|carrier |0.3.0.4 |0.3.0.9000 |*  |
+|lobstr  |NA      |1.2.2      |*  |
 
 # Revdeps
 
