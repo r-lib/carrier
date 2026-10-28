@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">carrier</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
       </span>
     </div>
 
@@ -98,7 +98,8 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in var(.x): could not find function "var"</span></span></code></pre></div>
+<span><span class="co">#&gt; Error in `var()`:</span></span>
+<span><span class="co">#&gt; ! could not find function "var"</span></span></code></pre></div>
 <p>So let’s add the namespace prefix:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span><span class="op">~</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span></span>
@@ -114,7 +115,8 @@
 <span></span>
 <span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/crate.html">crate</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">na_rm</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">fn</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in fn(1:10): object 'na_rm' not found</span></span></code></pre></div>
+<span><span class="co">#&gt; Error in `fn()`:</span></span>
+<span><span class="co">#&gt; ! object 'na_rm' not found</span></span></code></pre></div>
 <p>There are two techniques for packaging data into your crate: passing data as arguments, and unquoting data in the function.</p>
 <div class="section level4">
 <h4 id="passing-data-as-arguments">Passing data as arguments<a class="anchor" aria-label="anchor" href="#passing-data-as-arguments"></a>
